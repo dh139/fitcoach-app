@@ -1,0 +1,147 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/constants/app_colors.dart';
+import 'manual_entry_tab.dart';
+import 'photo_analyze_tab.dart';
+import 'search_food_tab.dart';
+
+class AddFoodSheet extends ConsumerStatefulWidget {
+  final String defaultMeal;
+
+  const AddFoodSheet({super.key, required this.defaultMeal});
+
+  static Future<void> show(BuildContext context, {String defaultMeal = 'snack'}) =>
+      showModalBottomSheet(
+        context:            context,
+        isScrollControlled: true,
+        backgroundColor:    Colors.transparent,
+        builder: (_) => ProviderScope(
+          parent: ProviderScope.containerOf(context),
+          child: AddFoodSheet(defaultMeal: defaultMeal),
+        ),
+      );
+
+  @override
+  ConsumerState<AddFoodSheet> createState() => _AddFoodSheetState();
+}
+
+class _AddFoodSheetState extends ConsumerState<AddFoodSheet>
+    with SingleTickerProviderStateMixin {
+
+  late final TabController _tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() { _tabs.dispose(); super.dispose(); }
+
+  void _onAdded() => Navigator.pop(context);
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.88,
+      padding: EdgeInsets.only(bottom: bottom),
+      decoration: const BoxDecoration(
+        color:        AppColors.surface1,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(children: [
+        // Handle
+        Container(
+          margin: const EdgeInsets.only(top: 10, bottom: 4),
+          width: 40, height: 4,
+          decoration: BoxDecoration(
+            color:        AppColors.border3,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        // Title
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(children: [
+            const Text('Add food', style: TextStyle(
+              fontFamily:    'Inter',
+              fontSize:      17,
+              fontWeight:    FontWeight.w700,
+              color:         AppColors.textPrimary,
+              letterSpacing: -0.3,
+            )),
+            const Spacer(),
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(Icons.close_rounded,
+                  color: AppColors.textTertiary, size: 22),
+            ),
+          ]),
+        ),
+
+        // Tab bar
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color:        AppColors.surface2,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: TabBar(
+            controller:    _tabs,
+            indicator: BoxDecoration(
+              color:        AppColors.surface1,
+              borderRadius: BorderRadius.circular(11),
+              border:       Border.all(color: AppColors.border2, width: 0.5),
+            ),
+            indicatorSize:  TabBarIndicatorSize.tab,
+            dividerColor:   Colors.transparent,
+            labelColor:     AppColors.textPrimary,
+            unselectedLabelColor: AppColors.textTertiary,
+            labelStyle: const TextStyle(
+              fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500,
+            ),
+            tabs: const [
+              Tab(text: 'Search'),
+              Tab(text: 'Photo'),
+              Tab(text: 'Manual'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        const Divider(height: 1, color: AppColors.border2),
+
+        // Tab content
+        Expanded(child: TabBarView(
+          controller: _tabs,
+          children: [
+            SingleChildScrollView(padding: const EdgeInsets.all(20),
+              child: SearchFoodTab(
+                defaultMeal: widget.defaultMeal,
+                onAdded:     _onAdded,
+              ),
+            ),
+            SingleChildScrollView(padding: const EdgeInsets.all(20),
+              child: PhotoAnalyzeTab(
+                defaultMeal: widget.defaultMeal,
+                onAdded:     _onAdded,
+              ),
+            ),
+            SingleChildScrollView(padding: const EdgeInsets.all(20),
+              child: ManualEntryTab(
+                defaultMeal: widget.defaultMeal,
+                onAdded:     _onAdded,
+              ),
+            ),
+          ],
+        )),
+      ]),
+    );
+  }
+}
