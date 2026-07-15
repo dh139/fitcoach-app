@@ -218,7 +218,7 @@ class _SearchResultTileState extends ConsumerState<_SearchResultTile> {
             child: Column(children: [
               // Macro strip
               Row(children: [
-                _MacroPill('P', macro.protein.round(), const Color(0xFF3B82F6)),
+                _MacroPill('P', macro.protein.round(), AppColors.accent5),
                 const SizedBox(width: 6),
                 _MacroPill('C', macro.carbs.round(),   const Color(0xFF22C55E)),
                 const SizedBox(width: 6),
@@ -300,15 +300,15 @@ class _SearchResultTileState extends ConsumerState<_SearchResultTile> {
                         width: 18, height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppColors.bg,
+                          color: AppColors.onLime,
                         ),
                       ))
                     : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Icon(Icons.add_rounded, color: AppColors.bg, size: 16),
+                        Icon(Icons.add_rounded, color: AppColors.onLime, size: 16),
                         SizedBox(width: 6),
                         Text('Add to log', style: TextStyle(
                           fontFamily: 'Inter', fontSize: 13,
-                          fontWeight: FontWeight.w700, color: AppColors.bg,
+                          fontWeight: FontWeight.w700, color: AppColors.onLime,
                         )),
                       ]),
                 ),

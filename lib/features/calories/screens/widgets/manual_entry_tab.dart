@@ -175,7 +175,7 @@ class _ManualEntryTabState extends ConsumerState<ManualEntryTab> {
               style: TextStyle(
                 fontFamily: 'Inter', fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: sel ? AppColors.bg : AppColors.textSecondary,
+                color: sel ? AppColors.onLime : AppColors.textSecondary,
               ),
             ),
           ),
@@ -194,7 +194,7 @@ class _ManualEntryTabState extends ConsumerState<ManualEntryTab> {
         label:    adding ? 'Adding...' : 'Add entry',
         loading:  adding,
         fullWidth: true,
-        leading:  const Icon(Icons.add_rounded, size: 18, color: AppColors.bg),
+        leading:  const Icon(Icons.add_rounded, size: 18, color: AppColors.onLime),
         onPressed: _add,
       ),
     ]);

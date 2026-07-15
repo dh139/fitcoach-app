@@ -17,7 +17,7 @@ class ImprovementScoreCard extends StatelessWidget {
 
   Color get _gradeColor => switch (data.composite) {
     >= 80 => AppColors.lime,
-    >= 60 => const Color(0xFF60A5FA),
+    >= 60 => AppColors.accent5,
     >= 40 => AppColors.warn,
     _     => AppColors.danger,
   };
@@ -25,7 +25,7 @@ class ImprovementScoreCard extends StatelessWidget {
   static const _pillarColors = {
     'weightProgress':   Color(0xFFFB7185),
     'consistency':      AppColors.lime,
-    'strengthIncrease': Color(0xFF60A5FA),
+    'strengthIncrease': AppColors.accent5,
     'dietAdherence':    Color(0xFFF59E0B),
   };
 

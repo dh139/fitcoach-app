@@ -10,8 +10,7 @@ import '../../../shared/widgets/fc_button.dart';
 import '../../../shared/widgets/fc_loader.dart';
 
 import 'widgets/edit_profile_sheet.dart';
-import 'widgets/profile_avatar.dart';
-import 'widgets/profile_stats_row.dart';
+import 'widgets/profile_hero_card.dart';
 import 'widgets/tdee_calculator.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -48,33 +47,6 @@ class ProfileScreen extends ConsumerWidget {
                 color:         AppColors.textPrimary,
                 letterSpacing: -0.3,
               )),
-              actions: [
-                // Edit button
-                GestureDetector(
-                  onTap: () => EditProfileSheet.show(context, user),
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 7),
-                    decoration: BoxDecoration(
-                      color:        AppColors.surface2,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: AppColors.border3, width: 0.5),
-                    ),
-                    child: const Row(children: [
-                      Icon(Icons.edit_rounded,
-                          color: AppColors.textSecondary, size: 15),
-                      SizedBox(width: 6),
-                      Text('Edit', style: TextStyle(
-                        fontFamily: 'Inter', fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
-                      )),
-                    ]),
-                  ),
-                ),
-              ],
             ),
 
             // ── Body ─────────────────────────────────────────────────
@@ -86,19 +58,10 @@ class ProfileScreen extends ConsumerWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
 
-                  // Avatar + name
-                  ProfileAvatar(user: user),
-                  const SizedBox(height: 24),
-
-                  // Stats row
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    decoration: BoxDecoration(
-                      color:        AppColors.surface1,
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: AppColors.slate, width: 1.0),
-                    ),
-                    child: ProfileStatsRow(user: user),
+                  // Premium profile hero (avatar + identity + headline stats)
+                  ProfileHeroCard(
+                    user: user,
+                    onEdit: () => EditProfileSheet.show(context, user),
                   ),
                   const SizedBox(height: 16),
 

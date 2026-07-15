@@ -141,6 +141,18 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
 
+                      // ── Summary hero ──────────────────────────────────
+                      _HistorySummary(
+                        sessions: state.workouts.length,
+                        minutes: state.workouts.fold<int>(
+                            0, (s, w) => s + w.durationSeconds) ~/ 60,
+                        calories: state.workouts.fold<int>(
+                            0, (s, w) => s + w.totalCaloriesBurned),
+                        xp: state.workouts.fold<int>(
+                            0, (s, w) => s + w.xpEarned),
+                      ),
+                      const SizedBox(height: 20),
+
                       // ── Charts section ────────────────────────────────
                       const Text('Progress charts', style: TextStyle(
                         fontFamily: 'Inter', fontSize: 13,
@@ -246,4 +258,107 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       ),
     );
   }
+}
+
+// ── History summary hero ─────────────────────────────────────────────────────
+class _HistorySummary extends StatelessWidget {
+  final int sessions, minutes, calories, xp;
+  const _HistorySummary({
+    required this.sessions,
+    required this.minutes,
+    required this.calories,
+    required this.xp,
+  });
+
+  String _fmt(int n) => n.toString().replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},');
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: AppColors.gradientHero,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.forest.withValues(alpha: 0.35),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.insights_rounded, color: AppColors.lime, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                'Lifetime progress',
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              _stat('$sessions', 'Sessions'),
+              _divider(),
+              _stat(_fmt(minutes), 'Minutes'),
+              _divider(),
+              _stat(_fmt(calories), 'Calories'),
+              _divider(),
+              _stat(_fmt(xp), 'XP'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _stat(String value, String label) => Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: const TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'PlusJakartaSans',
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withValues(alpha: 0.5),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _divider() => Container(
+        width: 1,
+        height: 30,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        color: Colors.white.withValues(alpha: 0.1),
+      );
 }

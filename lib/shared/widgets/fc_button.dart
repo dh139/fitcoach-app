@@ -67,8 +67,9 @@ class _FCButtonState extends State<FCButton> with TickerProviderStateMixin {
 
     switch (widget.variant) {
       case FCButtonVariant.primary:
-        bg = AppColors.primary;
-        fg = Colors.white;
+        // Signature lime pill — deep-forest label on electric lime.
+        bg = AppColors.lime;
+        fg = AppColors.onLime;
         border = Colors.transparent;
       case FCButtonVariant.secondary:
         bg = Colors.transparent;
@@ -106,7 +107,7 @@ class _FCButtonState extends State<FCButton> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(AppConstants.btnRadius),
         border: Border.all(color: border, width: 1),
         boxShadow: !isDisabled && widget.variant == FCButtonVariant.primary
-            ? [BoxShadow(color: AppColors.primary.withAlpha(60), blurRadius: 16, offset: const Offset(0, 4))]
+            ? [BoxShadow(color: AppColors.lime.withAlpha(110), blurRadius: 20, offset: const Offset(0, 8))]
             : null,
       ),
       child: Material(

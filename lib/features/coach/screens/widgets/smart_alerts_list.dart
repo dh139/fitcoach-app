@@ -96,6 +96,6 @@ class _SmartAlertsListState extends State<SmartAlertsList> {
     'positive' => (AppColors.limeDim,   AppColors.limeBorder,
                    AppColors.lime, Icons.trending_up_rounded),
     _          => (const Color(0x1A3B82F6), const Color(0x333B82F6),
-                   const Color(0xFF93C5FD), Icons.info_outline_rounded),
+                   AppColors.accent5Light, Icons.info_outline_rounded),
   };
 }

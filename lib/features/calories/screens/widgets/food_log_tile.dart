@@ -92,7 +92,7 @@ class FoodLogTile extends ConsumerWidget {
   };
 
   Color get _sourceColor => switch (entry.source) {
-    'search' => const Color(0xFF60A5FA),
+    'search' => AppColors.accent5,
     'photo'  => AppColors.coach,
     _        => AppColors.textSecondary,
   };

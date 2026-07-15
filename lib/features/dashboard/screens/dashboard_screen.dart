@@ -9,7 +9,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/fc_loader.dart';
 
 import '../providers/dashboard_provider.dart';
@@ -18,6 +17,7 @@ import 'widgets/decay_warning_banner.dart';
 import 'widgets/quick_actions_grid.dart';
 import 'widgets/streak_widget.dart';
 import 'widgets/xp_history_tile.dart';
+import 'widgets/hero_activity_card.dart';
 import '../providers/step_provider.dart';
 import '../../../core/network/api_client.dart';
 import '../../exercises/models/exercise_model.dart';
@@ -33,7 +33,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerProviderStateMixin {
   // State variables for interactive mockup cards
   int _waterGlasses = 4;
-  double _weight = 70.0;
   double _sleepHours = 7.4;
   int _heartRate = 72;
   bool _measuringHeartRate = false;
@@ -196,36 +195,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
         );
       }
     });
-  }
-
-  // Micro-interaction: Log Weight
-  void _showWeightDialog() {
-    final ctrl = TextEditingController(text: _weight.toString());
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface1,
-        title: const Text('Update Weight', style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.bold)),
-        content: TextField(
-          controller: ctrl,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: const InputDecoration(labelText: 'Weight (kg)'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () {
-              final val = double.tryParse(ctrl.text);
-              if (val != null && val > 0) {
-                setState(() => _weight = val);
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
   }
 
   // Micro-interaction: Log Sleep
@@ -653,31 +622,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 17),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.primary, Color(0xFF3B82F6)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(18),
+                    color: AppColors.lime,
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withAlpha(80),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
+                        color: AppColors.lime.withAlpha(120),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.play_arrow_rounded, color: Colors.white, size: 22),
+                      Icon(Icons.play_arrow_rounded, color: AppColors.onLime, size: 22),
                       SizedBox(width: 8),
                       Text(
                         'Start Workout Session',
                         style: TextStyle(
                           fontFamily: 'Outfit', fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                          color: AppColors.onLime,
                           letterSpacing: -0.2,
                         ),
                       ),
@@ -738,10 +703,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
         padding: const EdgeInsets.only(bottom: 90),
         child: FloatingActionButton(
           onPressed: () => context.go('/coach'),
-          backgroundColor: const Color(0xFF1E202B),
+          backgroundColor: AppColors.forest,
           elevation: 6,
           shape: const CircleBorder(),
-          child: const Icon(Icons.smart_toy_rounded, color: Color(0xFF6BB5FF), size: 24),
+          child: const Icon(Icons.smart_toy_rounded, color: AppColors.lime, size: 24),
         ),
       ),
       body: SafeArea(
@@ -761,7 +726,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                 surfaceTintColor: Colors.transparent,
                 elevation:       0,
                 scrolledUnderElevation: 0,
-                toolbarHeight:   64,
+                toolbarHeight:   74,
                 automaticallyImplyLeading: false,
                 flexibleSpace: Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppConstants.pageHPad),
@@ -811,20 +776,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF1A1C2B), Color(0xFF0F1629)],
+                                colors: AppColors.gradientHero,
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(22),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primary.withAlpha(30),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 6),
+                                  color: AppColors.forest.withAlpha(55),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 10),
                                 ),
                               ],
                               border: Border.all(
-                                color: Colors.white.withAlpha(15),
+                                color: AppColors.lime.withAlpha(30),
                                 width: 1.0,
                               ),
                             ),
@@ -835,16 +800,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                 Container(
                                   width: 52, height: 52,
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary.withAlpha(25),
-                                    borderRadius: BorderRadius.circular(16),
+                                    color: AppColors.lime.withAlpha(28),
+                                    borderRadius: BorderRadius.circular(18),
                                     border: Border.all(
-                                      color: AppColors.primary.withAlpha(60),
+                                      color: AppColors.lime.withAlpha(70),
                                       width: 1,
                                     ),
                                   ),
                                   child: const Icon(
                                     Icons.auto_awesome_rounded,
-                                    color: Color(0xFF6BB5FF),
+                                    color: AppColors.lime,
                                     size: 24,
                                   ),
                                 ),
@@ -900,20 +865,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                     width: 32, height: 32,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: Color(0xFF6BB5FF),
+                                      color: AppColors.lime,
                                     ),
                                   )
                                 else
                                   Container(
-                                    width: 42, height: 42,
+                                    width: 44, height: 44,
                                     decoration: BoxDecoration(
-                                      color: AppColors.primary,
+                                      color: AppColors.lime,
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: AppColors.primary.withAlpha(80),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 4),
+                                          color: AppColors.lime.withAlpha(110),
+                                          blurRadius: 14,
+                                          offset: const Offset(0, 5),
                                         ),
                                       ],
                                     ),
@@ -921,7 +886,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                       _preferencesSet
                                           ? Icons.play_arrow_rounded
                                           : Icons.tune_rounded,
-                                      color: Colors.white,
+                                      color: AppColors.onLime,
                                       size: 22,
                                     ),
                                   ),
@@ -931,115 +896,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                         ),
                       ),
 
-                      // ── 2. Large Hero Tracker Card ─────────────────────────────
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Container(
-                          height: 220,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(color: AppColors.primary.withOpacity(0.08), blurRadius: 20, offset: const Offset(0, 8)),
-                            ],
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: Image.network(
-                                  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop',
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.center,
-                                ),
-                              ),
-                              Positioned.fill(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.black.withOpacity(0.55),
-                                        Colors.black.withOpacity(0.15),
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 0, right: 0, bottom: 20, height: 50,
-                                child: CustomPaint(
-                                  painter: HeartbeatPainter(color: Colors.white.withOpacity(0.7)),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "$activeCals KCAL",
-                                      style: const TextStyle(
-                                        fontFamily: "Outfit",
-                                        fontSize: 34,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                        letterSpacing: -1.0,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.directions_walk_rounded, color: Colors.white70, size: 16),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          "$steps STEPS",
-                                          style: const TextStyle(
-                                            fontFamily: "Outfit",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white70,
-                                            letterSpacing: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // ── 2. Hero Activity Ring ──────────────────────────────────
+                      HeroActivityCard(
+                        steps: steps,
+                        goalSteps: stepState.targetSteps,
+                        activeCals: activeCals,
+                        activeMinutes: (steps / 110).round() + (workoutCals ~/ 8),
+                        distanceKm: steps * 0.000762,
+                        onTap: () => context.go('/history'),
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 60.ms)
+                          .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+                      const SizedBox(height: 20),
 
-                      // ── 3. Heart Beat Metric Card ──────────────────────────────
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: SizedBox(
-                          height: 115, // Expanded to 115 to prevent 9px RenderFlex bottom overflow
-                          child: _buildMetricCard(
-                            title: "Heart beat",
-                            value: _measuringHeartRate ? "..." : "$_heartRate bpm",
-                            status: _measuringHeartRate ? "MEASURING" : "NORMAL",
-                            bgColor: const Color(0xFFFFF0F2), // Light Pink
-                            textColor: const Color(0xFFFF5C7A),
-                            icon: Icons.favorite_rounded,
-                            onTap: _startHeartRateMeasurement,
-                          ),
-                        ),
-                      ),
+                      // ── 3. Quick vitals row (Heart · Water · Sleep) ────────────
+                      _buildVitalsRow()
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 140.ms)
+                          .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+                      const SizedBox(height: 24),
 
                       // ── Weekly Activity Chart (Past 7 days steps & calories burned) ──
-                      const Text(
-                        "Weekly Activity",
-                        style: TextStyle(
-                          fontFamily: "Outfit",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
+                      _sectionHeader('Weekly Activity',
+                          action: 'Details', onAction: () => context.go('/history')),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -1058,10 +938,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: const BoxDecoration(
-                                    color: Color(0xFFEEF6FF), // Soft light blue
+                                    color: AppColors.primaryDim,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.show_chart_rounded, color: Color(0xFF6BB5FF), size: 18),
+                                  child: const Icon(Icons.show_chart_rounded, color: AppColors.primary, size: 18),
                                 ),
                                 const SizedBox(width: 10),
                                 Column(
@@ -1108,7 +988,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                         width: 28,
                                         height: 100,
                                         decoration: BoxDecoration(
-                                          color: isSelected ? const Color(0xFFF0F4FA) : Colors.transparent,
+                                          color: isSelected ? AppColors.surface2 : Colors.transparent,
                                           borderRadius: BorderRadius.circular(14),
                                         ),
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
@@ -1137,8 +1017,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                                         decoration: BoxDecoration(
                                                           gradient: LinearGradient(
                                                             colors: isSelected
-                                                                ? [const Color(0xFF6BB5FF), const Color(0xFF3B82F6)]
-                                                                : [const Color(0xFF93C5FD), const Color(0xFF60A5FA)],
+                                                                ? [AppColors.limeBright, AppColors.lime]
+                                                                : [AppColors.primaryLight, AppColors.primary.withOpacity(0.55)],
                                                             begin: Alignment.topCenter,
                                                             end: Alignment.bottomCenter,
                                                           ),
@@ -1160,7 +1040,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                                           fontFamily: "Outfit",
                                           fontSize: 11,
                                           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                                          color: isSelected ? const Color(0xFF3B82F6) : AppColors.textTertiary,
+                                          color: isSelected ? AppColors.primary : AppColors.textTertiary,
                                         ),
                                       ),
                                     ],
@@ -1170,39 +1050,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                      ).animate().fadeIn(duration: 500.ms, delay: 220.ms).slideY(begin: 0.06, end: 0, curve: Curves.easeOutCubic),
+                      const SizedBox(height: 26),
 
                       // ── Streak Widget ──────────────────────────────────────────
-                      const Text(
-                        "Your Streak",
-                        style: TextStyle(
-                          fontFamily: "Outfit",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
+                      _sectionHeader('Your Streak'),
                       const StreakWidget(),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 26),
 
                       // ── Quick Actions Grid (Leaderboard, AI Reports, Rivals) ────
+                      _sectionHeader('Explore'),
                       const QuickActionsGrid(),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 26),
 
                       // ── Recent Activity / XP History ────────────────────────────
                       if (dashState.xpHistory.isNotEmpty) ...[
-                        const Text(
-                          "Recent Activity",
-                          style: TextStyle(
-                            fontFamily: "Outfit",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
+                        _sectionHeader('Recent Activity'),
                         ListView.separated(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
@@ -1224,122 +1087,205 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
     );
   }
 
-  // Helper builder for metric cards
-  Widget _buildMetricCard({
-    required String title,
-    required String value,
-    required String status,
-    required Color bgColor,
-    required Color textColor,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    final scale = _measuringHeartRate && title == "Heart beat" ? (1.0 + 0.05 * math.sin(_heartPulseController.value * math.pi * 2)) : 1.0;
-    
-    return Transform.scale(
-      scale: scale,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: textColor.withOpacity(0.12), width: 1.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontFamily: "PlusJakartaSans",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: textColor.withOpacity(0.8),
-                    ),
-                  ),
-                  Icon(icon, color: textColor, size: 18),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                value,
-                style: TextStyle(
-                  fontFamily: "Outfit",
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.55),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    fontFamily: "PlusJakartaSans",
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    color: textColor,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-            ],
+  void _addWater() {
+    setState(() => _waterGlasses = (_waterGlasses + 1).clamp(0, 12));
+    if (_waterGlasses == 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Hydration goal reached! 💧')),
+      );
+    }
+  }
+
+  // ── Quick vitals row: Heart · Water · Sleep ────────────────────────────────
+  Widget _buildVitalsRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: AnimatedBuilder(
+            animation: _heartPulseController,
+            builder: (_, child) {
+              final s = _measuringHeartRate
+                  ? 1.0 + 0.05 * math.sin(_heartPulseController.value * math.pi * 2)
+                  : 1.0;
+              return Transform.scale(scale: s, child: child);
+            },
+            child: _VitalTile(
+              icon: Icons.favorite_rounded,
+              accent: AppColors.accent2,
+              value: _measuringHeartRate ? '· · ·' : '$_heartRate',
+              unit: 'bpm',
+              label: 'Heart rate',
+              onTap: _startHeartRateMeasurement,
+            ),
           ),
         ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _VitalTile(
+            icon: Icons.water_drop_rounded,
+            accent: AppColors.accent3,
+            value: '$_waterGlasses',
+            unit: '/8',
+            label: 'Water',
+            progress: (_waterGlasses / 8).clamp(0.0, 1.0),
+            onTap: _addWater,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _VitalTile(
+            icon: Icons.bedtime_rounded,
+            accent: AppColors.accent4,
+            value: _sleepHours.toStringAsFixed(1),
+            unit: 'h',
+            label: 'Sleep',
+            onTap: _showSleepDialog,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _sectionHeader(String title, {String? action, VoidCallback? onAction}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+              letterSpacing: -0.4,
+            ),
+          ),
+          const Spacer(),
+          if (action != null)
+            GestureDetector(
+              onTap: onAction,
+              child: Text(
+                action,
+                style: const TextStyle(
+                  fontFamily: 'PlusJakartaSans',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 }
 
-// ── Heartbeat/Wave Painter ───────────────────────────────────────────────────
-class HeartbeatPainter extends CustomPainter {
-  final Color color;
-  HeartbeatPainter({required this.color});
+// ── Premium vital tile ─────────────────────────────────────────────────────────
+class _VitalTile extends StatelessWidget {
+  final IconData icon;
+  final Color accent;
+  final String value, unit, label;
+  final double? progress;
+  final VoidCallback onTap;
+
+  const _VitalTile({
+    required this.icon,
+    required this.accent,
+    required this.value,
+    required this.unit,
+    required this.label,
+    required this.onTap,
+    this.progress,
+  });
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round;
-
-    final path = Path();
-    final w = size.width;
-    final h = size.height;
-
-    path.moveTo(0, h * 0.6);
-    path.lineTo(w * 0.2, h * 0.6);
-    path.lineTo(w * 0.25, h * 0.5);
-    path.lineTo(w * 0.3, h * 0.65);
-    path.lineTo(w * 0.35, h * 0.6);
-    path.lineTo(w * 0.5, h * 0.6);
-    path.lineTo(w * 0.55, h * 0.15);
-    path.lineTo(w * 0.6, h * 0.9);
-    path.lineTo(w * 0.65, h * 0.55);
-    path.lineTo(w * 0.7, h * 0.6);
-    path.lineTo(w * 0.8, h * 0.6);
-    path.lineTo(w * 0.84, h * 0.52);
-    path.lineTo(w * 0.88, h * 0.63);
-    path.lineTo(w * 0.92, h * 0.6);
-    path.lineTo(w, h * 0.6);
-
-    canvas.drawPath(path, paint);
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.surface1,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.slate),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 12,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Icon(icon, color: accent, size: 16),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Flexible(
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                      letterSpacing: -0.6,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  unit,
+                  style: const TextStyle(
+                    fontFamily: 'PlusJakartaSans',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textTertiary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: const TextStyle(
+                fontFamily: 'PlusJakartaSans',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            if (progress != null) ...[
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 4,
+                  backgroundColor: accent.withValues(alpha: 0.14),
+                  valueColor: AlwaysStoppedAnimation(accent),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // ── Workout Tag Chip ─────────────────────────────────────────────────────────

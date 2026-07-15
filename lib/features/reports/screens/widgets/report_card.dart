@@ -122,7 +122,7 @@ class ReportCard extends ConsumerWidget {
       ReportSectionTile(
         title:     'Workout analysis',
         icon:      Icons.fitness_center_rounded,
-        iconColor: const Color(0xFF60A5FA),
+        iconColor: AppColors.accent5,
         iconBg:    const Color(0x1A3B82F6),
         bodyText:  r.workoutFeedback,
       ),

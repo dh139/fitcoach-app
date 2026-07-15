@@ -65,14 +65,14 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen>
                   ref.read(workoutProvider.notifier).startSession();
                   context.go('/workout');
                 },
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                elevation: 6,
+                backgroundColor: AppColors.lime,
+                foregroundColor: AppColors.onLime,
+                elevation: 8,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
+                    borderRadius: BorderRadius.circular(100)),
                 icon: const Icon(Icons.play_arrow_rounded, size: 22),
                 label: Text(
-                  'Start Workout  (${selected.length})',
+                  'Start Workout  ·  ${selected.length}',
                   style: const TextStyle(
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w800,
@@ -359,11 +359,11 @@ class _BodyPartChips extends StatelessWidget {
   // (bodyPartKey, displayLabel, icon, accentColor)
   static const _categories = [
     ('chest',       'Chest',     Icons.self_improvement_rounded,      Color(0xFFFF7A8A)),
-    ('back',        'Back',      Icons.accessibility_new_rounded,     Color(0xFF8E7CFF)),
+    ('back',        'Back',      Icons.accessibility_new_rounded,     AppColors.primary),
     ('shoulders',   'Shoulders', Icons.sports_gymnastics_rounded,     Color(0xFFFFB547)),
     ('upper legs',  'Legs',      Icons.directions_walk_rounded,       Color(0xFF34C7A8)),
-    ('upper arms',  'Arms',      Icons.fitness_center_rounded,        Color(0xFF8E7CFF)),
-    ('cardio',      'Cardio',    Icons.monitor_heart_rounded,         Color(0xFF6BB5FF)),
+    ('upper arms',  'Arms',      Icons.fitness_center_rounded,        AppColors.primary),
+    ('cardio',      'Cardio',    Icons.monitor_heart_rounded,         AppColors.accent5),
     ('waist',       'Waist',     Icons.directions_run_rounded,        Color(0xFFFFB547)),
   ];
 

@@ -13,7 +13,7 @@ class MacroDonutRing extends StatelessWidget {
     this.goal = 2000,
   });
 
-  static const _protein = Color(0xFF3B82F6);
+  static const _protein = AppColors.accent5;
   static const _carbs   = Color(0xFF22C55E);
   static const _fat     = Color(0xFFF59E0B);
 
@@ -184,7 +184,7 @@ class _DonutPainter extends CustomPainter {
       }
     }
 
-    drawArc(proteinPct, const Color(0xFF3B82F6));
+    drawArc(proteinPct, AppColors.accent5);
     drawArc(carbsPct,   const Color(0xFF22C55E));
     drawArc(fatPct,     const Color(0xFFF59E0B));
   }

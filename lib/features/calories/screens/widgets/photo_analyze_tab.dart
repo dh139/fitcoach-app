@@ -195,9 +195,9 @@ class _PhotoAnalyzeTabState extends ConsumerState<PhotoAnalyzeTab> {
         _PhotoOptionBtn(
           icon:  Icons.photo_library_rounded,
           label: 'Choose from gallery',
-          color: const Color(0xFF60A5FA),
+          color: AppColors.accent5,
           bg:    const Color(0x1A3B82F6),
-          border: const Color(0xFF93C5FD),
+          border: AppColors.accent5Light,
           onTap: () => _pickImage(ImageSource.gallery),
         ),
       ] else ...[
@@ -515,7 +515,7 @@ class _PhotoAnalyzeTabState extends ConsumerState<PhotoAnalyzeTab> {
                     ),
                     const SizedBox(height: 4),
                     Row(children: [
-                      _MacroChip('P', '${item.protein.round()}g', const Color(0xFF3B82F6)),
+                      _MacroChip('P', '${item.protein.round()}g', AppColors.accent5),
                       const SizedBox(width: 4),
                       _MacroChip('C', '${item.carbs.round()}g', const Color(0xFFF59E0B)),
                       const SizedBox(width: 4),

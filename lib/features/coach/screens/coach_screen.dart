@@ -275,17 +275,17 @@ class _AppBar extends StatelessWidget {
         curve: Curves.easeInOut,
         width: 44, height: 44,
         decoration: BoxDecoration(
-          color:  AppColors.coachDim,
+          color:  AppColors.forest,
           shape:  BoxShape.circle,
-          border: Border.all(color: isStreaming ? AppColors.coach : AppColors.coachBorder, width: isStreaming ? 2.0 : 1.0),
+          border: Border.all(color: isStreaming ? AppColors.lime : Colors.transparent, width: 2.0),
           boxShadow: isStreaming ? [
-            BoxShadow(color: AppColors.coach.withOpacity(0.5), blurRadius: 15, spreadRadius: 2)
+            BoxShadow(color: AppColors.lime.withOpacity(0.45), blurRadius: 15, spreadRadius: 2)
           ] : [
-            BoxShadow(color: AppColors.coach.withOpacity(0.2), blurRadius: 8, spreadRadius: 0)
+            BoxShadow(color: AppColors.forest.withOpacity(0.25), blurRadius: 8, spreadRadius: 0)
           ],
         ),
         child: const Icon(Icons.smart_toy_rounded,
-            color: AppColors.coach, size: 24),
+            color: AppColors.lime, size: 24),
       ),
       const SizedBox(width: 14),
 

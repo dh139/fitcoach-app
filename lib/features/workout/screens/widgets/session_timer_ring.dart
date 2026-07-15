@@ -24,7 +24,7 @@ class SessionTimerRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = (elapsedSeconds / _minSeconds).clamp(0.0, 1.0);
-    final color    = isUnlocked ? AppColors.lime : const Color(0xFF3B82F6);
+    final color    = isUnlocked ? AppColors.lime : AppColors.primary;
 
     return SizedBox(
       width: 130, height: 130,

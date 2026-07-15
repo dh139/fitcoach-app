@@ -94,7 +94,7 @@ class TdeeCalculator extends StatelessWidget {
               label: _goalLabel,
               value: '$_goalCalories',
               suffix: 'kcal/day',
-              color: const Color(0xFF60A5FA),
+              color: AppColors.accent5,
             ),
           ]),
           const SizedBox(height: 12),

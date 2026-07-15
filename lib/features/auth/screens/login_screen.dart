@@ -77,7 +77,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             child: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF1A1B2E), Color(0xFF0F1629)],
+                  colors: AppColors.gradientHero,
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -127,7 +127,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.accent5.withAlpha((0.18 * 255).toInt()),
+                          color: AppColors.lime.withAlpha((0.20 * 255).toInt()),
                           blurRadius: 70,
                           spreadRadius: 15,
                         ),
@@ -409,14 +409,14 @@ class _LoginLogoPainter extends CustomPainter {
     final shift  = 13.0 + math.sin(t * math.pi) * 3.0;
 
     paint.shader = const LinearGradient(
-      colors: [AppColors.primary, Color(0xFF6BB5FF)],
+      colors: [AppColors.limeBright, AppColors.lime],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ).createShader(Rect.fromCircle(center: center.translate(-shift, 0), radius: radius));
     canvas.drawCircle(center.translate(-shift, 0), radius, paint);
 
     paint.shader = const LinearGradient(
-      colors: [AppColors.accent2, Color(0xFFFF9E7C)],
+      colors: [Color(0xFF6FE3A4), AppColors.primary],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ).createShader(Rect.fromCircle(center: center.translate(shift, 0), radius: radius));

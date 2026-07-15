@@ -117,7 +117,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             child: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF1A1B2E), Color(0xFF0D1220)],
+                  colors: AppColors.gradientHero,
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -563,12 +563,12 @@ class _RegisterLogoPainter extends CustomPainter {
     final shift  = 6.0 + math.sin(t * math.pi) * 2.0;
 
     paint.shader = const LinearGradient(
-      colors: [AppColors.primary, Color(0xFF6BB5FF)],
+      colors: [AppColors.limeBright, AppColors.lime],
     ).createShader(Rect.fromCircle(center: center.translate(-shift, 0), radius: radius));
     canvas.drawCircle(center.translate(-shift, 0), radius, paint);
 
     paint.shader = const LinearGradient(
-      colors: [AppColors.accent2, Color(0xFFFF9E7C)],
+      colors: [Color(0xFF6FE3A4), AppColors.primary],
     ).createShader(Rect.fromCircle(center: center.translate(shift, 0), radius: radius));
     canvas.drawCircle(center.translate(shift, 0), radius, paint);
   }

@@ -375,7 +375,7 @@ class _Loader extends StatelessWidget {
                     child: Container(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors.primary, AppColors.accent2],
+                          colors: [AppColors.primary, AppColors.lime],
                         ),
                       ),
                     ),
@@ -448,7 +448,7 @@ class _LogoPainter extends CustomPainter {
       radius: radius,
       progress: ring1Progress,
       strokeWidth: strokeWidth,
-      colors: const [AppColors.primary, Color(0xFF6B8EFF)],
+      colors: const [AppColors.limeBright, AppColors.lime],
     );
 
     _drawRing(
@@ -457,7 +457,7 @@ class _LogoPainter extends CustomPainter {
       radius: radius,
       progress: ring2Progress,
       strokeWidth: strokeWidth,
-      colors: const [AppColors.accent2, Color(0xFFFF9E7C)],
+      colors: const [Color(0xFF6FE3A4), AppColors.primary],
     );
 
     if (pulseProgress > 0) {

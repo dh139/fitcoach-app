@@ -6,6 +6,7 @@ import '../../../features/auth/providers/auth_provider.dart';
 import '../../../shared/widgets/fc_loader.dart';
 import '../providers/leaderboard_provider.dart';
 import 'widgets/leaderboard_rank_row.dart';
+import 'widgets/leaderboard_podium.dart';
 import 'widgets/leaderboard_skeleton.dart';
 import 'widgets/my_rank_card.dart';
 import 'widgets/score_formula_row.dart';
@@ -243,14 +244,31 @@ class LeaderboardScreen extends ConsumerWidget {
                         )),
                       )
 
-                    // Rank rows
-                    else if (state.current != null)
-                      Column(children: state.current!.entries
-                          .map((e) => LeaderboardRankRow(
-                                entry: e,
-                                isMe:  e.userId == userId,
-                              ))
-                          .toList()),
+                    // Podium (top 3) + remaining rows
+                    else if (state.current != null) ...[
+                      if (state.current!.entries.length >= 3) ...[
+                        LeaderboardPodium(
+                          top: state.current!.entries
+                              .where((e) => e.rank <= 3)
+                              .toList(),
+                          myUserId: userId,
+                        ),
+                        const SizedBox(height: 16),
+                        Column(children: state.current!.entries
+                            .where((e) => e.rank > 3)
+                            .map((e) => LeaderboardRankRow(
+                                  entry: e,
+                                  isMe:  e.userId == userId,
+                                ))
+                            .toList()),
+                      ] else
+                        Column(children: state.current!.entries
+                            .map((e) => LeaderboardRankRow(
+                                  entry: e,
+                                  isMe:  e.userId == userId,
+                                ))
+                            .toList()),
+                    ],
                   ]),
                 ),
               ),

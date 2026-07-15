@@ -166,7 +166,7 @@ class ChallengeCard extends StatelessWidget {
               loading:  claiming,
               size:     FCButtonSize.sm,
               leading:  const Icon(Icons.bolt_rounded,
-                  size: 14, color: AppColors.bg),
+                  size: 14, color: AppColors.onLime),
               onPressed: onClaim,
             )
           else

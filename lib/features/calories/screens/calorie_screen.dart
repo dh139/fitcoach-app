@@ -309,11 +309,11 @@ class _CalorieScreenState extends ConsumerState<CalorieScreen> {
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFF1A1B2E), Color(0xFF0F1629)],
+                          colors: AppColors.gradientHero,
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(22),
+                        borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.primary.withAlpha(30),

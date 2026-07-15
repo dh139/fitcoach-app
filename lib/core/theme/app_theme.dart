@@ -14,12 +14,14 @@ class AppTheme {
     canvasColor:     AppColors.bg,
 
     colorScheme: const ColorScheme.light(
-      primary:    AppColors.primary,
-      secondary:  AppColors.accent2,
-      surface:    AppColors.surface1,
-      onPrimary:  Colors.white,
-      onSurface:  AppColors.textPrimary,
-      onSecondary:Colors.white,
+      primary:      AppColors.primary,
+      secondary:    AppColors.lime,
+      tertiary:     AppColors.accent3,
+      surface:      AppColors.surface1,
+      onPrimary:    Colors.white,
+      onSecondary:  AppColors.onLime,
+      onSurface:    AppColors.textPrimary,
+      surfaceTint:  Colors.transparent,
     ),
 
     appBarTheme: AppBarTheme(
@@ -103,11 +105,17 @@ class AppTheme {
 
     chipTheme: ChipThemeData(
       backgroundColor:    AppColors.surface1,
-      selectedColor:      AppColors.primaryDim,
+      selectedColor:      AppColors.limeSoft,
       labelStyle:         AppTextStyles.bodySm,
       side:               const BorderSide(color: AppColors.border2),
       shape:              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       padding:            const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    ),
+
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color:            AppColors.primary,
+      linearTrackColor: AppColors.surface3,
+      circularTrackColor: AppColors.surface3,
     ),
 
     snackBarTheme: SnackBarThemeData(
