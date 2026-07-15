@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 
-/// Wraps any screen content with a fade-slide entrance animation.
 class FCPageScaffold extends StatefulWidget {
   final Widget child;
-  final Duration delay;
-
-  const FCPageScaffold({
-    super.key,
-    required this.child,
-    this.delay = Duration.zero,
-  });
+  const FCPageScaffold({super.key, required this.child});
 
   @override
   State<FCPageScaffold> createState() => _FCPageScaffoldState();
@@ -18,33 +13,41 @@ class FCPageScaffold extends StatefulWidget {
 class _FCPageScaffoldState extends State<FCPageScaffold>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
-  late final Animation<double>    _fade;
-  late final Animation<Offset>    _slide;
+  late final Animation<Offset> _slide;
+  late final Animation<double> _fade;
 
   @override
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-      vsync:    this,
-      duration: const Duration(milliseconds: 380),
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
     );
-    _fade  = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
     _slide = Tween<Offset>(
-      begin: const Offset(0, 0.04),
-      end:   Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
-
-    Future.delayed(widget.delay, () {
-      if (mounted) _ctrl.forward();
-    });
+      begin: const Offset(0, 0.05),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+    _fade = Tween<double>(begin: 0, end: 1).animate(_ctrl);
+    _ctrl.forward();
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-    opacity: _fade,
-    child:   SlideTransition(position: _slide, child: widget.child),
-  );
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.pageHPad),
+          child: widget.child,
+        ),
+      ),
+    );
+  }
 }

@@ -13,7 +13,8 @@ import 'widgets/quick_prompts_row.dart';
 import 'widgets/smart_alerts_list.dart';
 
 class CoachScreen extends ConsumerStatefulWidget {
-  const CoachScreen({super.key});
+  final String? initialMessage;
+  const CoachScreen({this.initialMessage, super.key});
 
   @override
   ConsumerState<CoachScreen> createState() => _CoachScreenState();
@@ -22,6 +23,17 @@ class CoachScreen extends ConsumerStatefulWidget {
 class _CoachScreenState extends ConsumerState<CoachScreen> {
   bool _showScore  = true;
   bool _showAlerts = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialMessage != null && widget.initialMessage!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final userName = ref.read(currentUserProvider)?.name ?? 'Athlete';
+        ref.read(coachProvider.notifier).sendMessage(widget.initialMessage!, userName);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,142 +55,78 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
 
           // ── Scrollable top panel: score + alerts ─────────────────────────
           if (state.scoreLoading || state.scoreData != null)
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.35,
-              ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(
-                    AppConstants.pageHPad, 10,
-                    AppConstants.pageHPad, 0),
-                child: Column(children: [
-
-                  // Improvement score
+            Padding(
+              padding: const EdgeInsets.fromLTRB(AppConstants.pageHPad, 10, AppConstants.pageHPad, 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Improvement Score Row Card
                   if (state.scoreLoading)
                     Container(
-                      height: 60,
+                      height: 52,
                       decoration: BoxDecoration(
                         color:        AppColors.surface2,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Center(child: FCLoader(size: 20)),
                     )
-                  else if (state.scoreData != null) ...[
+                  else if (state.scoreData != null)
                     GestureDetector(
-                      onTap: () => setState(() => _showScore = !_showScore),
+                      onTap: () {
+                        // Open the gorgeous breakdown bottom sheet!
+                        _showScoreBreakdownSheet(context, state.scoreData!);
+                      },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 9),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
                           color:        AppColors.surface1,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: AppColors.border2, width: 0.5),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border2, width: 0.5),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 10, offset: const Offset(0, 4)),
+                          ],
                         ),
                         child: Row(children: [
                           Container(
-                            width: 26, height: 26,
+                            width: 28, height: 28,
                             decoration: BoxDecoration(
-                              color:        const Color(0x1AC084FC),
-                              borderRadius: BorderRadius.circular(7),
+                              color:        AppColors.coachDim,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.trending_up_rounded,
-                                color: Color(0xFFC084FC), size: 14),
+                            child: const Icon(Icons.trending_up_rounded, color: AppColors.coach, size: 14),
                           ),
                           const SizedBox(width: 10),
-                          const Text('Improvement score', style: TextStyle(
-                            fontFamily: 'Inter', fontSize: 12,
+                          const Text('Improvement Score', style: TextStyle(
+                            fontFamily: 'Inter', fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
+                            color: AppColors.textPrimary,
                           )),
                           const Spacer(),
                           Text(
                             '${state.scoreData!.composite}/100',
                             style: const TextStyle(
-                              fontFamily: 'Inter', fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.lime,
+                              fontFamily: 'Inter', fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.coach,
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          Icon(
-                            _showScore
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.textTertiary, size: 18,
-                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.textTertiary, size: 12),
                         ]),
                       ),
                     ),
 
-                    if (_showScore) ...[
-                      const SizedBox(height: 8),
-                      ImprovementScoreCard(data: state.scoreData!),
-                    ],
-                  ],
-
-                  // Smart alerts
-                  if (state.scoreData != null &&
-                      state.scoreData!.alerts.isNotEmpty) ...[
+                  // Smart Alerts list (if present)
+                  if (state.scoreData != null && state.scoreData!.alerts.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: () =>
-                          setState(() => _showAlerts = !_showAlerts),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 9),
-                        decoration: BoxDecoration(
-                          color:        AppColors.surface1,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: AppColors.border2, width: 0.5),
-                        ),
-                        child: Row(children: [
-                          Container(
-                            width: 26, height: 26,
-                            decoration: BoxDecoration(
-                              color:        AppColors.warnDim,
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: const Icon(Icons.notifications_rounded,
-                                color: AppColors.warn, size: 14),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Smart alerts (${state.scoreData!.alerts.length})',
-                            style: const TextStyle(
-                              fontFamily: 'Inter', fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const Spacer(),
-                          Icon(
-                            _showAlerts
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.textTertiary, size: 18,
-                          ),
-                        ]),
-                      ),
+                    SmartAlertsList(
+                      alerts: state.scoreData!.alerts,
+                      onActionTap: (action) {
+                        ref.read(coachProvider.notifier).sendMessage(action, name);
+                      },
                     ),
-
-                    if (_showAlerts) ...[
-                      const SizedBox(height: 8),
-                      SmartAlertsList(
-                        alerts: state.scoreData!.alerts,
-                        onActionTap: (action) {
-                          // Pre-fill input with the action text
-                          // We use a key to communicate with ChatInputBar
-                          // via the notifier's sendMessage directly
-                          ref.read(coachProvider.notifier)
-                              .sendMessage(action, name);
-                        },
-                      ),
-                    ],
                   ],
-                  const SizedBox(height: 4),
-                ]),
+                ],
               ),
             ),
 
@@ -203,9 +151,9 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
                 const Icon(Icons.error_outline_rounded,
                     color: AppColors.danger, size: 14),
                 const SizedBox(width: 8),
-                Expanded(child: Text(state.error!, style: const TextStyle(
+                Expanded(child: Text(state.error!, style: TextStyle(
                   fontFamily: 'Inter', fontSize: 11,
-                  color: Color(0xFFFF8888),
+                  color: AppColors.danger,
                 ))),
                 GestureDetector(
                   onTap: () => ref.read(coachProvider.notifier)
@@ -235,6 +183,65 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
                     .sendMessage(text, name),
           ),
         ]),
+      ),
+    );
+  }
+
+  void _showScoreBreakdownSheet(BuildContext context, dynamic scoreData) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.bg,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Drag handle
+            Container(
+              width: 36, height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: AppColors.textTertiary.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Performance Score",
+                  style: TextStyle(
+                    fontFamily: "Outfit",
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.surface2,
+                    padding: const EdgeInsets.all(6),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Score card itself
+            ImprovementScoreCard(data: scoreData),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
@@ -270,9 +277,9 @@ class _AppBar extends StatelessWidget {
         decoration: BoxDecoration(
           color:  AppColors.coachDim,
           shape:  BoxShape.circle,
-          border: Border.all(color: isStreaming ? AppColors.brandPurple : AppColors.coachBorder, width: isStreaming ? 2.0 : 1.0),
+          border: Border.all(color: isStreaming ? AppColors.coach : AppColors.coachBorder, width: isStreaming ? 2.0 : 1.0),
           boxShadow: isStreaming ? [
-            BoxShadow(color: AppColors.brandPurple.withOpacity(0.5), blurRadius: 15, spreadRadius: 2)
+            BoxShadow(color: AppColors.coach.withOpacity(0.5), blurRadius: 15, spreadRadius: 2)
           ] : [
             BoxShadow(color: AppColors.coach.withOpacity(0.2), blurRadius: 8, spreadRadius: 0)
           ],
@@ -293,10 +300,10 @@ class _AppBar extends StatelessWidget {
             Container(
               width: 8, height: 8,
               decoration: BoxDecoration(
-                color: isStreaming ? AppColors.brandPurple : AppColors.lime,
+                color: isStreaming ? AppColors.coach : AppColors.success,
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(color: (isStreaming ? AppColors.brandPurple : AppColors.lime).withOpacity(0.5), blurRadius: 6, spreadRadius: 1)
+                  BoxShadow(color: (isStreaming ? AppColors.coach : AppColors.success).withOpacity(0.5), blurRadius: 6, spreadRadius: 1)
                 ],
               ),
             ),

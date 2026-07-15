@@ -199,6 +199,7 @@ class CalorieNotifier extends StateNotifier<CalorieState> {
   Future<void> analyzePhoto({
     required String base64Image,
     required String mimeType,
+    String description = '',
   }) async {
     state = state.copyWith(
         photoLoading: true, photoResult: null, photoError: null);
@@ -206,6 +207,7 @@ class CalorieNotifier extends StateNotifier<CalorieState> {
       final result = await _repo.analyzePhoto(
         base64Image: base64Image,
         mimeType: mimeType,
+        description: description,
       );
       if (result.success) {
         state = state.copyWith(photoLoading: false, photoResult: result);

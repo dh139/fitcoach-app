@@ -41,11 +41,15 @@ class _WorkoutSummaryState extends ConsumerState<WorkoutSummary>
     final result = ref.read(workoutProvider).result;
     if (result != null && result.didLevelUp &&
         result.previousLevel != null && result.newLevel != null) {
-      LevelUpDialog.show(
-        context,
-        previousLevel: result.previousLevel!,
-        newLevel:      result.newLevel!,
-      );
+      final prev = int.tryParse(result.previousLevel ?? '');
+      final next = int.tryParse(result.newLevel ?? '');
+      if (prev != null && next != null) {
+        LevelUpDialog.show(
+          context,
+          previousLevel: prev,
+          newLevel:      next,
+        );
+      }
     }
   }
 

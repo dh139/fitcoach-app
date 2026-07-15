@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
 import '../repositories/auth_repository.dart';
 import 'auth_state.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 
 // Repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) => const AuthRepository());
@@ -64,6 +65,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? gender,
     String? fitnessGoal,
     String? activityLevel,
+    String? role,
   }) async {
     state = const AuthState.loading();
     try {
@@ -71,6 +73,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         name: name, email: email, password: password,
         age: age, weight: weight, height: height,
         gender: gender, fitnessGoal: fitnessGoal, activityLevel: activityLevel,
+        role: role,
       );
       state = AuthState.authenticated(user);
     } on AuthException catch (e) {
@@ -93,6 +96,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Logout
   Future<void> logout() async {
     await _repo.logout();
+    final service = FlutterBackgroundService();
+    if (await service.isRunning()) {
+      service.invoke('stopService');
+    }
     state = const AuthState.unauthenticated();
   }
 

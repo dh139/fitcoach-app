@@ -27,10 +27,12 @@ class CalorieRepository {
   Future<PhotoAnalysisResult> analyzePhoto({
     required String base64Image,
     required String mimeType,
+    String description = '',
   }) async {
     final res = await ApiClient.post(ApiEndpoints.calorieAnalyze, data: {
       'base64Image': base64Image,
       'mimeType':    mimeType,
+      'description': description,
     });
     if (res.statusCode == 200 && res.data['success'] == true) {
       return PhotoAnalysisResult.fromJson(

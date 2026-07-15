@@ -45,11 +45,11 @@ class LeaderboardScreen extends ConsumerWidget {
                   Container(
                     width: 32, height: 32,
                     decoration: BoxDecoration(
-                      color:        const Color(0x1AFBBF24),
+                      color:        AppColors.accent4Dim,
                       borderRadius: BorderRadius.circular(9),
                     ),
                     child: const Icon(Icons.leaderboard_rounded,
-                        color: Color(0xFFFBBF24), size: 17),
+                        color: AppColors.accent4, size: 17),
                   ),
                   const SizedBox(width: 10),
                   const Text('Leaderboard', style: TextStyle(
@@ -103,7 +103,7 @@ class LeaderboardScreen extends ConsumerWidget {
                                   vertical: 9),
                               decoration: BoxDecoration(
                                 color: active
-                                    ? AppColors.lime
+                                    ? AppColors.textPrimary
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(11),
                               ),
@@ -115,7 +115,7 @@ class LeaderboardScreen extends ConsumerWidget {
                                   fontSize:    12,
                                   fontWeight:  FontWeight.w700,
                                   color: active
-                                      ? AppColors.bg
+                                      ? Colors.white
                                       : AppColors.textTertiary,
                                 ),
                               ),
@@ -141,20 +141,20 @@ class LeaderboardScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
-                        color:        const Color(0x1A3B82F6),
+                        color:        AppColors.accent5Dim,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: const Color(0x333B82F6), width: 0.5),
+                            color: AppColors.accent5Light, width: 0.5),
                       ),
                       child: Row(children: [
-                        const Icon(Icons.verified_rounded,
-                            color: Color(0xFF60A5FA), size: 15),
+                        Icon(Icons.verified_rounded,
+                            color: AppColors.accent5, size: 15),
                         const SizedBox(width: 8),
-                        const Expanded(child: Text(
+                        Expanded(child: Text(
                           'Rankings use verified XP only — cheat sessions excluded',
                           style: TextStyle(
                             fontFamily: 'Inter', fontSize: 11,
-                            color: Color(0xFF93C5FD), height: 1.4,
+                            color: AppColors.accent5, height: 1.4,
                           ),
                         )),
                       ]),

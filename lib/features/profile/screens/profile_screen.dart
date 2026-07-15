@@ -1,4 +1,5 @@
 import 'package:fitcoach/core/services/notification_service.dart';
+import 'package:fitcoach/features/dashboard/providers/step_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../features/auth/providers/auth_provider.dart';
 import '../../../shared/widgets/fc_button.dart';
 import '../../../shared/widgets/fc_loader.dart';
-import '../../../shared/widgets/level_badge.dart';
+
 import 'widgets/edit_profile_sheet.dart';
 import 'widgets/profile_avatar.dart';
 import 'widgets/profile_stats_row.dart';
@@ -29,6 +30,7 @@ class ProfileScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
+        bottom: false,
         child: CustomScrollView(
           slivers: [
 
@@ -90,11 +92,11 @@ class ProfileScreen extends ConsumerWidget {
 
                   // Stats row
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
                       color:        AppColors.surface1,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.border2, width: 0.5),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(color: AppColors.slate, width: 1.0),
                     ),
                     child: ProfileStatsRow(user: user),
                   ),
@@ -102,30 +104,30 @@ class ProfileScreen extends ConsumerWidget {
 
                   // Info card
                   Container(
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color:        AppColors.surface1,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.border2, width: 0.5),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(color: AppColors.slate, width: 1.0),
                     ),
                     child: Column(children: [
                       _InfoRow(Icons.person_outline_rounded,
                           'Goal', user.readableGoal),
-                      const Divider(height: 16, color: AppColors.border2),
+                      const Divider(height: 20, color: AppColors.slate),
                       _InfoRow(Icons.directions_run_rounded,
                           'Activity', _actLabel(user.activityLevel)),
                       if (user.weight != null) ...[
-                        const Divider(height: 16, color: AppColors.border2),
+                        const Divider(height: 20, color: AppColors.slate),
                         _InfoRow(Icons.monitor_weight_outlined,
                             'Weight', '${user.weight} kg'),
                       ],
                       if (user.height != null) ...[
-                        const Divider(height: 16, color: AppColors.border2),
+                        const Divider(height: 20, color: AppColors.slate),
                         _InfoRow(Icons.height_rounded,
                             'Height', '${user.height} cm'),
                       ],
                       if (user.age != null) ...[
-                        const Divider(height: 16, color: AppColors.border2),
+                        const Divider(height: 20, color: AppColors.slate),
                         _InfoRow(Icons.cake_outlined,
                             'Age', '${user.age} years'),
                       ],
@@ -143,8 +145,8 @@ class ProfileScreen extends ConsumerWidget {
                   Consumer(builder: (context, ref, _) {
                     return _NavTile(
                       icon:  Icons.notifications_active_rounded,
-                      color: const Color(0xFF8B5CF6),
-                      bg:    const Color(0xFF8B5CF6).withOpacity(0.15),
+                      color: AppColors.primary,
+                      bg:    AppColors.primaryDim,
                       label: 'Daily AI Reminder',
                       sub:   'Receive custom workout push notifications',
                       onTap: () async {
@@ -198,6 +200,75 @@ class ProfileScreen extends ConsumerWidget {
                       },
                     );
                   }),
+                  const SizedBox(height: 8),
+
+                  Consumer(builder: (context, ref, _) {
+                    return _NavTile(
+                      icon:  Icons.directions_walk_rounded,
+                      color: AppColors.lime,
+                      bg:    AppColors.limeDim,
+                      label: 'Daily Step Target',
+                      sub:   'Set a custom step goal',
+                      onTap: () async {
+                        final valController = TextEditingController();
+                        
+                        await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: AppColors.surface1,
+                            title: const Text('Set Step Target', style: TextStyle(color: AppColors.textPrimary)),
+                            content: TextField(
+                              controller: valController,
+                              keyboardType: TextInputType.number,
+                              style: const TextStyle(color: AppColors.textPrimary),
+                              decoration: const InputDecoration(
+                                hintText: "e.g. 10000",
+                                hintStyle: TextStyle(color: AppColors.textTertiary),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  final newTarget = int.tryParse(valController.text);
+                                  if (newTarget != null && newTarget > 0) {
+                                    ref.read(stepProvider.notifier).setTarget(newTarget);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Save', style: TextStyle(color: AppColors.brandPurple)),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                  const SizedBox(height: 8),
+
+                  Consumer(builder: (context, ref, _) {
+                    return _NavTile(
+                      icon:  Icons.notifications_active_rounded,
+                      color: AppColors.accent5,
+                      bg:    AppColors.accent5Dim,
+                      label: 'Test Notifications',
+                      sub:   'Verify alarms and timezone',
+                      onTap: () async {
+                        final notifService = ref.read(notificationServiceProvider);
+                        await notifService.runDiagnostics();
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Test notification sent! Check logs for diagnostics.'),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }),
                   const SizedBox(height: 24),
 
                   // Navigation shortcuts
@@ -215,8 +286,8 @@ class ProfileScreen extends ConsumerWidget {
 
                   _NavTile(
                     icon:  Icons.leaderboard_rounded,
-                    color: const Color(0xFFFBBF24),
-                    bg:    const Color(0x1AFBBF24),
+                    color: AppColors.accent4,
+                    bg:    AppColors.accent4Dim,
                     label: 'Leaderboard',
                     sub:   'See your global ranking',
                     onTap: () => context.go('/leaderboard'),
@@ -269,19 +340,31 @@ class _InfoRow extends StatelessWidget {
   const _InfoRow(this.icon, this.label, this.value);
 
   @override
-  Widget build(BuildContext context) => Row(children: [
-    Icon(icon, color: AppColors.textTertiary, size: 16),
-    const SizedBox(width: 10),
-    Text(label, style: const TextStyle(
-      fontFamily: 'Inter', fontSize: 13,
-      color: AppColors.textSecondary,
-    )),
-    const Spacer(),
-    Text(value, style: const TextStyle(
-      fontFamily: 'Inter', fontSize: 13,
-      fontWeight: FontWeight.w600, color: AppColors.textPrimary,
-    )),
-  ]);
+  Widget build(BuildContext context) => Row(
+    children: [
+      Icon(icon, color: AppColors.textTertiary, size: 18),
+      const SizedBox(width: 10),
+      Text(
+        label,
+        style: const TextStyle(
+          fontFamily: 'PlusJakartaSans',
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textSecondary,
+        ),
+      ),
+      const Spacer(),
+      Text(
+        value,
+        style: const TextStyle(
+          fontFamily: 'Outfit',
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    ],
+  );
 }
 
 class _Section extends StatelessWidget {
@@ -289,10 +372,18 @@ class _Section extends StatelessWidget {
   const _Section(this.text);
 
   @override
-  Widget build(BuildContext context) => Text(text, style: const TextStyle(
-    fontFamily: 'Inter', fontSize: 13,
-    fontWeight: FontWeight.w600, color: AppColors.textPrimary,
-  ));
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(left: 4),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Outfit',
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: AppColors.textPrimary,
+      ),
+    ),
+  );
 }
 
 class _NavTile extends StatelessWidget {
@@ -311,35 +402,56 @@ class _NavTile extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     onTap: onTap,
     child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color:        AppColors.surface1,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border2, width: 0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.slate, width: 1.0),
       ),
-      child: Row(children: [
-        Container(
-          width: 36, height: 36,
-          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(10)),
-          child: Icon(icon, color: color, size: 18),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: const TextStyle(
-              fontFamily: 'Inter', fontSize: 13,
-              fontWeight: FontWeight.w600, color: AppColors.textPrimary,
-            )),
-            Text(sub, style: const TextStyle(
-              fontFamily: 'Inter', fontSize: 11,
-              color: AppColors.textTertiary,
-            )),
-          ],
-        )),
-        const Icon(Icons.chevron_right_rounded,
-            color: AppColors.textTertiary, size: 18),
-      ]),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  sub,
+                  style: const TextStyle(
+                    fontFamily: 'PlusJakartaSans',
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: AppColors.textTertiary,
+            size: 20,
+          ),
+        ],
+      ),
     ),
   );
 }

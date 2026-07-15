@@ -63,7 +63,7 @@ class _UserBubble extends StatelessWidget {
     child: Container(
       padding:     const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration:  const BoxDecoration(
-        color:        AppColors.lime,
+        color:        AppColors.textPrimary,
         borderRadius: BorderRadius.only(
           topLeft:     Radius.circular(18),
           topRight:    Radius.circular(18),
@@ -75,7 +75,7 @@ class _UserBubble extends StatelessWidget {
         fontFamily:  'Inter',
         fontSize:    13,
         fontWeight:  FontWeight.w500,
-        color:       AppColors.bg,
+        color:       Colors.white,
         height:      1.5,
       )),
     ),

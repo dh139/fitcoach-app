@@ -2,11 +2,9 @@ class AppConstants {
   AppConstants._();
 
   // ── API ────────────────────────────────────────────────────────────────────
-  // Change this to your deployed backend URL in production
-  static const baseUrl     = 'https://fitcoach-zlpn.onrender.com/api'; // Android emulator
-  // static const baseUrl  = 'http://localhost:5000/api'; // iOS simulator
-  // static const baseUrl  = 'https://your-backend.com/api'; // Production
-
+  // Android emulator uses 10.0.2.2 to reach the host machine's localhost.
+  // For a physical device, use your LAN IP (e.g. 192.168.x.x).
+  static const baseUrl     = 'https://fitcoach-zlpn.onrender.com/api';
   static const connectTimeout = Duration(seconds: 15);
   static const receiveTimeout = Duration(seconds: 30);
 
@@ -22,12 +20,12 @@ class AppConstants {
     'elite':        [10000, 99999],
   };
 
-  static const minWorkoutSeconds = 120;  // anti-cheat minimum
+  static const minWorkoutSeconds = 120;
 
   // ── UI ────────────────────────────────────────────────────────────────────
   static const pageHPad   = 20.0;
-  static const cardRadius = 20.0;
-  static const btnRadius  = 12.0;
+  static const cardRadius = 24.0;
+  static const btnRadius  = 20.0;
   static const smRadius   = 8.0;
   static const pillRadius = 100.0;
 }

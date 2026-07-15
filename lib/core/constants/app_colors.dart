@@ -3,79 +3,119 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // ── Brand ──────────────────────────────────────────────────────────────────
-  static const lime        = Color(0xFF1E1E24); // Primary action is now extremely dark/black
-  static const limeHover   = Color(0xFF3B3B42);
-  static const limeLight   = Color(0xFFE5E7EB);
-  static const limeDim     = Color(0x1F1E1E24);
-  static const limeBorder  = Color(0x331E1E24); 
-
-  // Pastel Brand Colors
-  static const brandPurple = Color(0xFFB3A4FF);
-  static const brandPurpleDim = Color(0xFFE5DFFF);
-  static const brandOrange = Color(0xFFFFD166);
-  static const brandOrangeDim = Color(0xFFFFF2CD);
-  static const brandBlue   = Color(0xFFA2C2FF);
-  static const brandBlueDim = Color(0xFFE3EDFF);
-  static const brandMint   = Color(0xFFB9FBC0);
-  static const brandMintDim = Color(0xFFE5FCE8);
+  // ── Brand strategy: Restrained (warm tinted neutrals + soft accent) ──────────
+  // Backgrounds sit on a soft warm-grey so whites feel intentional, not stark.
+  // Saturation lives in pastel cards, not in chrome.
 
   // ── Surfaces ───────────────────────────────────────────────────────────────
-  static const bg          = Color(0xFFF9FAFC);
-  static const surface1    = Color(0xFFFFFFFF);
-  static const surface2    = Color(0xFFF3F4F6);
-  static const surface3    = Color(0xFFE5E7EB);
-  static const surface4    = Color(0xFFD1D5DB);
-  static const surface5    = Color(0xFF9CA3AF);
+  static const bg            = Color(0xFFE2E6EE); // soft grey-blue background from mockup
+  static const surface1      = Colors.white;
+  static const surface2      = Color(0xFFF7F8FC);
+  static const surface3      = Color(0xFFECEFF5);
+  static const surface4      = Color(0xFFD6DBE4);
+  static const surface5      = Color(0xFFC4CAD5);
+  static const slate         = Color(0xFFE5E9F0);
+  static const mist          = Color(0xFFB4BDCB);
 
   // ── Text ───────────────────────────────────────────────────────────────────
-  static const textPrimary   = Color(0xFF111827);
-  static const textSecondary = Color(0xFF4B5563);
-  static const textTertiary  = Color(0xFF9CA3AF);
-  static const textHint      = Color(0xFFD1D5DB);
+  static const textPrimary   = Color(0xFF1E202B);
+  static const textSecondary = Color(0xFF5F6275);
+  static const textTertiary  = Color(0xFF9EA3BA);
+  static const textHint      = Color(0xFFC2C7DA);
 
-  // ── Borders ────────────────────────────────────────────────────────────────
-  static const border1       = Color(0xFFF3F4F6);
-  static const border2       = Color(0xFFE5E7EB);
-  static const border3       = Color(0xFFD1D5DB);
+  // ── Pastel accents (the colour of each card on dashboard) ──────────────────
+  static const primary       = Color(0xFF8E7CFF); // brand purple/lavender
+  static const primaryLight  = Color(0xFFE5DFFF);
+  static const primaryDim    = Color(0xFFF1ECFF);
+
+  static const accent2       = Color(0xFFFF7A8A); // pink (heart)
+  static const accent2Light  = Color(0xFFFFE0E5);
+  static const accent2Dim    = Color(0xFFFFF2F4);
+
+  static const accent3       = Color(0xFF34C7A8); // mint (weight)
+  static const accent3Light  = Color(0xFFD4F5EC);
+  static const accent3Dim    = Color(0xFFE9FBF5);
+
+  static const accent4       = Color(0xFFFFB547); // amber (sleep)
+  static const accent4Light  = Color(0xFFFFEACB);
+  static const accent4Dim    = Color(0xFFFFF6E7);
+
+  static const accent5       = Color(0xFF6BB5FF); // blue (blood pressure)
+  static const accent5Light  = Color(0xFFD8EBFF);
+  static const accent5Dim    = Color(0xFFEEF6FF);
+
+  // ── Borders & dividers ─────────────────────────────────────────────────────
+  static const border1       = Color(0xFFECEDF1);
+  static const border2       = Color(0xFFE3E5EB);
+  static const border3       = Color(0xFFD8DAE1);
+  static const primaryBorder = primaryLight;
+  static const accent4Border = accent4Light;
+  static const accent5Border = accent5Light;
 
   // ── Semantic ───────────────────────────────────────────────────────────────
-  static const danger       = Color(0xFFEF4444);
-  static const dangerDim    = Color(0x26EF4444);
-  static const dangerBorder = Color(0x40EF4444);
-  static const warn         = Color(0xFFF59E0B);
-  static const warnDim      = Color(0x26F59E0B);
-  static const success      = Color(0xFF10B981);
-  static const successDim   = Color(0x2610B981);
-  static const info         = Color(0xFF3B82F6);
-  static const infoDim      = Color(0x263B82F6);
-  static const coach        = Color(0xFF8B5CF6);
-  static const coachDim     = Color(0xFFEDE9FE);
-  static const coachBorder  = Color(0xFFDDD6FE);
+  static const danger        = Color(0xFFFF5C7A);
+  static const dangerDim     = Color(0xFFFFE5EB);
+  static const dangerBorder  = Color(0xFFFFCCD7);
 
-  // ── Levels (Refined for light mode) ─────────────────────────────────────────────────────────────────
-  static const beginner        = brandMint;
-  static const beginnerDim     = brandMintDim;
-  static const beginnerBorder  = brandMint;
+  static const warn          = Color(0xFFFFB547);
+  static const warnDim       = Color(0xFFFFF1DA);
 
-  static const intermediate       = brandBlue;
-  static const intermediateDim    = brandBlueDim;
-  static const intermediateBorder = brandBlue;
+  static const success       = Color(0xFF2EBE9B);
+  static const successDim    = Color(0xFFDFF8F1);
+  static const info          = Color(0xFF6BB5FF);
+  static const infoDim       = Color(0xFFE3F0FF);
 
-  static const advanced        = brandPurple;
-  static const advancedDim     = brandPurpleDim;
-  static const advancedBorder  = brandPurple;
+  static const coach         = accent5;
+  static const coachDim      = accent5Dim;
+  static const coachBorder   = accent5Light;
 
-  static const elite        = brandOrange;
-  static const eliteDim     = brandOrangeDim;
-  static const eliteBorder  = brandOrange;
+  // ── Levels ─────────────────────────────────────────────────────────────────
+  static const beginner      = Color(0xFF34C7A8);
+  static const beginnerDim   = accent3Dim;
+  static const beginnerBorder = accent3Light;
 
-  // ── Body part colors (Pastel) ─────────────────────────────────────────────
-  static const bodyChest       = Color(0xFFFFB4A2);
-  static const bodyBack        = Color(0xFFA2C2FF);
-  static const bodyShoulders   = Color(0xFFB3A4FF);
-  static const bodyUpperArms   = Color(0xFFFFD166);
-  static const bodyUpperLegs   = Color(0xFFB9FBC0);
-  static const bodyWaist       = Color(0xFFFFC8DD);
-  static const bodyCardio      = Color(0xFFE0BBFF);
+  static const intermediate  = Color(0xFF8E7CFF);
+  static const intermediateDim = primaryDim;
+  static const intermediateBorder = primaryLight;
+
+  static const advanced      = Color(0xFFFF7A8A);
+  static const advancedDim   = accent2Dim;
+  static const advancedBorder = accent2Light;
+
+  static const elite         = Color(0xFFFFB547);
+  static const eliteDim      = accent4Dim;
+  static const eliteBorder   = accent4Light;
+
+  // ── Gradients (used sparingly on hero / CTA) ───────────────────────────────
+  static const gradientHero     = [Color(0xFF8E7CFF), Color(0xFFFF7A8A)];
+  static const gradientCard     = [Colors.white, Color(0xFFF7F6F9)];
+  static const gradientWarm     = [Color(0xFFFFB547), Color(0xFFFF7A8A)];
+  static const gradientCool     = [Color(0xFF8E7CFF), Color(0xFF6BB5FF)];
+  static const gradientPrimary  = [Color(0xFF8E7CFF), Color(0xFFFF7A8A)];
+  static const gradientPremium  = [Color(0xFF8E7CFF), Color(0xFFFFB547)];
+
+  // ── Body part colours ──────────────────────────────────────────────────────
+  static const bodyChest       = accent2;
+  static const bodyBack        = primary;
+  static const bodyShoulders   = accent4;
+  static const bodyUpperArms   = accent2;
+  static const bodyUpperLegs   = accent3;
+  static const bodyWaist       = accent4;
+  static const bodyCardio      = accent5;
+
+  // ── Backward-compatible aliases (existing code keeps working) ──────────────
+  static const kineticGreen   = Color(0xFF34C7A8);
+  static const electricLime   = Color(0xFF8E7CFF);
+  static const warningAccent  = accent2;
+  static const premiumAccent  = primary;
+
+  static const lime           = primary;
+  static const limeHover      = primary;
+  static const limeLight      = primaryLight;
+  static const limeDim        = primaryDim;
+  static const limeBorder     = primaryLight;
+  static const brandPurple    = primary;
+  static const brandOrange    = accent2;
+  static const brandBlue      = info;
+  static const brandMint      = accent3;
 }

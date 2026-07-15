@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_text_styles.dart';
 
 class ExerciseSearchBar extends StatefulWidget {
-  final String          initialValue;
+  final String initialValue;
   final ValueChanged<String> onChanged;
-  final VoidCallback?   onClear;
-
-  const ExerciseSearchBar({
-    super.key,
-    required this.onChanged,
-    this.initialValue = '',
-    this.onClear,
-  });
+  const ExerciseSearchBar({super.key, this.initialValue = '', required this.onChanged});
 
   @override
   State<ExerciseSearchBar> createState() => _ExerciseSearchBarState();
@@ -19,81 +13,52 @@ class ExerciseSearchBar extends StatefulWidget {
 
 class _ExerciseSearchBarState extends State<ExerciseSearchBar> {
   late final TextEditingController _ctrl;
-  bool _hasFocus = false;
+  late final FocusNode _focusNode;
+  bool _focused = false;
 
   @override
   void initState() {
     super.initState();
     _ctrl = TextEditingController(text: widget.initialValue);
+    _focusNode = FocusNode();
+    _focusNode.addListener(() => setState(() => _focused = _focusNode.hasFocus));
   }
 
   @override
   void dispose() {
     _ctrl.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      onFocusChange: (f) => setState(() => _hasFocus = f),
-      child: Container(
-        height: 46,
-        decoration: BoxDecoration(
-          color:        AppColors.surface2,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: _hasFocus ? AppColors.limeBorder : AppColors.border3,
-            width: _hasFocus ? 1.0 : 0.5,
-          ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: AppColors.surface1,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: _focused ? AppColors.primary.withOpacity(0.4) : AppColors.border1, width: _focused ? 1.5 : 0.5),
+      ),
+      child: TextField(
+        controller: _ctrl,
+        focusNode: _focusNode,
+        onChanged: widget.onChanged,
+        style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: AppColors.textPrimary),
+        decoration: InputDecoration(
+          hintText: 'Search exercises...',
+          hintStyle: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
+          prefixIcon: const Padding(padding: EdgeInsets.all(14), child: Icon(Icons.search_rounded, color: AppColors.textTertiary, size: 20)),
+          suffixIcon: _ctrl.text.isNotEmpty
+              ? GestureDetector(
+                  onTap: () { _ctrl.clear(); widget.onChanged(''); },
+                  child: const Padding(padding: EdgeInsets.all(14), child: Icon(Icons.close_rounded, color: AppColors.textTertiary, size: 18)),
+                )
+              : null,
+          border: InputBorder.none,
+          filled: false,
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),
-        child: Row(children: [
-          const SizedBox(width: 14),
-          const Icon(Icons.search_rounded,
-              color: AppColors.textTertiary, size: 20),
-          const SizedBox(width: 10),
-          Expanded(child: TextField(
-            controller:     _ctrl,
-            onChanged:      widget.onChanged,
-            style: const TextStyle(
-              fontFamily: 'Inter', fontSize: 14,
-              color: AppColors.textPrimary,
-            ),
-            decoration: const InputDecoration(
-              hintText:       'Search exercises, muscles...',
-              hintStyle: TextStyle(
-                fontFamily: 'Inter', fontSize: 14,
-                color: AppColors.textTertiary,
-              ),
-              border:         InputBorder.none,
-              isDense:        true,
-              contentPadding: EdgeInsets.zero,
-            ),
-            textInputAction: TextInputAction.search,
-          )),
-          if (_ctrl.text.isNotEmpty)
-            GestureDetector(
-              onTap: () {
-                _ctrl.clear();
-                widget.onChanged('');
-                widget.onClear?.call();
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  width: 20, height: 20,
-                  decoration: BoxDecoration(
-                    color:        AppColors.surface4,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.close_rounded,
-                      color: AppColors.textSecondary, size: 13),
-                ),
-              ),
-            )
-          else
-            const SizedBox(width: 14),
-        ]),
       ),
     );
   }

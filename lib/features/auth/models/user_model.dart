@@ -20,6 +20,8 @@ class UserModel {
   final String? lastWorkoutDate;
   final String? avatar;
   final String  createdAt;
+  final String  role;
+  final String? referralCode;
 
   const UserModel({
     required this.id,
@@ -41,6 +43,8 @@ class UserModel {
     this.lastWorkoutDate,
     this.avatar,
     required this.createdAt,
+    required this.role,
+    this.referralCode,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -63,6 +67,8 @@ class UserModel {
     lastWorkoutDate:     json['lastWorkoutDate'] as String?,
     avatar:              json['avatar']          as String?,
     createdAt:          (json['createdAt']       as String?) ?? '',
+    role:               (json['role']            as String?) ?? 'user',
+    referralCode:        json['referralCode']    as String?,
   );
 
   Map<String, dynamic> toJson() => {
@@ -85,6 +91,8 @@ class UserModel {
     'lastWorkoutDate':    lastWorkoutDate,
     'avatar':             avatar,
     'createdAt':          createdAt,
+    'role':               role,
+    'referralCode':        referralCode,
   };
 
   String toJsonString() => jsonEncode(toJson());
@@ -109,6 +117,8 @@ class UserModel {
     int?     totalMinutesWorked,
     String?  lastWorkoutDate,
     String?  avatar,
+    String?  role,
+    String?  referralCode,
   }) => UserModel(
     id:                  id,
     name:                name               ?? this.name,
@@ -129,6 +139,8 @@ class UserModel {
     lastWorkoutDate:     lastWorkoutDate    ?? this.lastWorkoutDate,
     avatar:              avatar             ?? this.avatar,
     createdAt:           createdAt,
+    role:                role               ?? this.role,
+    referralCode:        referralCode       ?? this.referralCode,
   );
 
   // Helpers

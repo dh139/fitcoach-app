@@ -3,6 +3,7 @@ import '../models/xp_log_model.dart';
 import '../models/xp_profile_model.dart';
 import '../models/workout_stats_model.dart';
 import '../repositories/xp_repository.dart';
+import '../../../core/network/api_client.dart';
 
 // Repository provider
 final xpRepositoryProvider =
@@ -13,6 +14,7 @@ class DashboardState {
   final XpProfileModel?    xpProfile;
   final WorkoutStatsModel? stats;
   final List<XpLogModel>   xpHistory;
+  final String             dailyAdvice;
   final bool               loading;
   final String?            error;
   final bool               freezeLoading;
@@ -21,6 +23,7 @@ class DashboardState {
     this.xpProfile,
     this.stats,
     this.xpHistory     = const [],
+    this.dailyAdvice   = 'Loading daily advice...',
     this.loading       = false,
     this.error,
     this.freezeLoading = false,
@@ -30,6 +33,7 @@ class DashboardState {
     XpProfileModel?    xpProfile,
     WorkoutStatsModel? stats,
     List<XpLogModel>?  xpHistory,
+    String?            dailyAdvice,
     bool?              loading,
     String?            error,
     bool?              freezeLoading,
@@ -37,6 +41,7 @@ class DashboardState {
     xpProfile:     xpProfile     ?? this.xpProfile,
     stats:         stats         ?? this.stats,
     xpHistory:     xpHistory     ?? this.xpHistory,
+    dailyAdvice:   dailyAdvice   ?? this.dailyAdvice,
     loading:       loading       ?? this.loading,
     error:         error,
     freezeLoading: freezeLoading ?? this.freezeLoading,
@@ -56,11 +61,12 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
   Future<void> load() async {
     state = state.copyWith(loading: true, error: null);
     try {
-      // Fetch all three in parallel
+      // Fetch all four in parallel
       final results = await Future.wait([
         _repo.getXpProfile(),
         _repo.getWorkoutStats(),
         _repo.getXpHistory(limit: 10),
+        _fetchDailyAdvice(),
       ]);
 
       state = state.copyWith(
@@ -68,9 +74,22 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         xpProfile:  results[0] as XpProfileModel,
         stats:      results[1] as WorkoutStatsModel,
         xpHistory:  results[2] as List<XpLogModel>,
+        dailyAdvice: results[3] as String,
       );
     } catch (e) {
       state = state.copyWith(loading: false, error: e.toString());
+    }
+  }
+
+  Future<String> _fetchDailyAdvice() async {
+    try {
+      final res = await ApiClient.get('/coach/daily-advice');
+      if (res.statusCode == 200 && res.data['success'] == true) {
+        return res.data['data'] as String? ?? 'Stay active today!';
+      }
+      return 'Maintain your daily workouts and step targets!';
+    } catch (_) {
+      return 'Stay hydrated and eat high-protein meals!';
     }
   }
 

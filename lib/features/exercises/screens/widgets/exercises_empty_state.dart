@@ -1,61 +1,42 @@
-import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../shared/widgets/fc_button.dart';
+import "package:flutter/material.dart";
+import "../../../../core/constants/app_colors.dart";
+import "../../../../core/constants/app_text_styles.dart";
 
 class ExercisesEmptyState extends StatelessWidget {
-  final bool   hasFilter;
+  final bool hasFilter;
   final VoidCallback onClear;
-
-  const ExercisesEmptyState({
-    super.key,
-    required this.hasFilter,
-    required this.onClear,
-  });
+  const ExercisesEmptyState({super.key, required this.hasFilter, required this.onClear});
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Padding(
-      padding: const EdgeInsets.all(32),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-          width: 80, height: 80,
-          decoration: BoxDecoration(
-            color:        AppColors.surface2,
-            borderRadius: BorderRadius.circular(24),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            width: 72, height: 72,
+            decoration: BoxDecoration(color: AppColors.surface2, borderRadius: BorderRadius.circular(22)),
+            child: const Icon(Icons.search_off_rounded, color: AppColors.textTertiary, size: 32),
           ),
-          child: const Icon(Icons.fitness_center_rounded,
-              color: AppColors.surface4, size: 36),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          hasFilter ? 'No exercises found' : 'No exercises yet',
-          style: const TextStyle(
-            fontFamily:  'Inter',
-            fontSize:    16,
-            fontWeight:  FontWeight.w600,
-            color:       AppColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          hasFilter
-            ? 'Try different filters or search terms'
-            : 'Check your connection and try again',
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontFamily: 'Inter', fontSize: 13,
-            color: AppColors.textTertiary, height: 1.5,
-          ),
-        ),
-        if (hasFilter) ...[
           const SizedBox(height: 20),
-          FCButton(
-            label:    'Clear filters',
-            variant:  FCButtonVariant.secondary,
-            onPressed: onClear,
-          ),
-        ],
-      ]),
-    ));
+          Text(hasFilter ? "No exercises found" : "No exercises yet",
+            style: AppTextStyles.h3.copyWith(color: AppColors.textSecondary)),
+          const SizedBox(height: 8),
+          Text(hasFilter ? "Try adjusting your filters or search term" : "Your exercise library will appear here",
+            style: AppTextStyles.bodySm.copyWith(color: AppColors.textTertiary), textAlign: TextAlign.center),
+          if (hasFilter) ...[
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: onClear,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(color: AppColors.primaryDim, borderRadius: BorderRadius.circular(12)),
+                child: const Text("Clear filters", style: TextStyle(fontFamily: "Inter", fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.primary)),
+              ),
+            ),
+          ],
+        ]),
+      ),
+    );
   }
 }

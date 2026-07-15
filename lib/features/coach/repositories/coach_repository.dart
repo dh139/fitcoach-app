@@ -41,7 +41,7 @@ class CoachRepository {
   // ── SSE streaming chat ─────────────────────────────────────────────────────
   // Uses the `http` package directly because Dio cannot handle
   // chunked streaming responses properly.
-  Stream<String> streamChat(String message) async* {
+  Stream<String> streamChat(String message, {String? context}) async* {
     final token   = await SecureStorage.getToken();
     final baseUrl = AppConstants.baseUrl;
     final uri     = Uri.parse('$baseUrl${ApiEndpoints.coachChat}');
@@ -52,7 +52,10 @@ class CoachRepository {
         'Authorization': 'Bearer $token',
         'Accept':        'text/event-stream',
       })
-      ..body = jsonEncode({'message': message});
+      ..body = jsonEncode({
+        'message': message,
+        if (context != null) 'context': context,
+      });
 
     final response =
         await http.Client().send(request).timeout(

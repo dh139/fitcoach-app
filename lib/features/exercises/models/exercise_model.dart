@@ -51,6 +51,20 @@ class ExerciseModel {
         '${w[0].toUpperCase()}${w.substring(1)}').join(' ');
 
   bool get hasGif => gifUrl.isNotEmpty;
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'exerciseId': exerciseId,
+    'name': name,
+    'bodyPart': bodyPart,
+    'equipment': equipment,
+    'gifUrl': gifUrl,
+    'target': target,
+    'secondaryMuscles': secondaryMuscles,
+    'instructions': instructions,
+    'difficulty': difficulty,
+    'caloriesPerMinute': caloriesPerMinute,
+  };
 }
 
 // Filter options returned from /exercises/meta/filters

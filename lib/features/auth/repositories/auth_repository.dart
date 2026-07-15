@@ -53,6 +53,7 @@ class AuthRepository {
     String? gender,
     String? fitnessGoal,
     String? activityLevel,
+    String? role,
   }) async {
     try {
       final res = await ApiClient.post(ApiEndpoints.register, data: {
@@ -65,6 +66,7 @@ class AuthRepository {
         if (gender       != null) 'gender':        gender,
         if (fitnessGoal  != null) 'fitnessGoal':   fitnessGoal,
         if (activityLevel!= null) 'activityLevel': activityLevel,
+        if (role         != null) 'role':          role,
       });
 
       if (res.statusCode == 201 && res.data['success'] == true) {

@@ -26,9 +26,9 @@ class RivalsScreen extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(msg, style: const TextStyle(
             fontFamily: 'Inter', fontSize: 13,
-            color: AppColors.bg,
+            color: Colors.white,
           )),
-          backgroundColor:   AppColors.lime,
+          backgroundColor:   AppColors.textPrimary,
           behavior:          SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12)),

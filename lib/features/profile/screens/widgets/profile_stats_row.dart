@@ -44,7 +44,7 @@ class _Tile extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
-    width: 0.5, height: 32,
-    color: AppColors.border2,
+    width: 1.0, height: 32,
+    color: AppColors.slate,
   );
 }

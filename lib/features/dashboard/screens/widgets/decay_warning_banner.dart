@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
+import "package:flutter/material.dart";
+import "../../../../core/constants/app_colors.dart";
+import "../../../../core/constants/app_text_styles.dart";
 
 class DecayWarningBanner extends StatelessWidget {
   final int? daysInactive;
@@ -8,35 +9,46 @@ class DecayWarningBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-      decoration: BoxDecoration(
-        color:        AppColors.dangerDim,
-        borderRadius: BorderRadius.circular(14),
-        border:       Border.all(color: AppColors.dangerBorder, width: 0.5),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: const BoxDecoration(
+        color: AppColors.surface1,
+        border: Border(
+          left: BorderSide(color: AppColors.warningAccent, width: 3),
+        ),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(14),
+          bottomRight: Radius.circular(14),
+        ),
       ),
-      child: Row(children: [
-        const Icon(Icons.warning_amber_rounded,
-            color: AppColors.danger, size: 18),
-        const SizedBox(width: 10),
-        Expanded(child: RichText(text: TextSpan(
-          style: const TextStyle(
-            fontFamily: 'Inter', fontSize: 12,
-            color: Color(0xFFFF8888), height: 1.4,
+      child: Row(
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: AppColors.warningAccent, size: 18),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "XP Decay Warning",
+                  style: TextStyle(
+                    fontFamily: "Outfit",
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.warningAccent,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  daysInactive != null
+                      ? "$daysInactive days inactive - complete a workout to stop XP loss."
+                      : "Complete a workout to stop XP loss.",
+                  style: AppTextStyles.bodySm.copyWith(color: AppColors.textSecondary, fontSize: 12),
+                ),
+              ],
+            ),
           ),
-          children: [
-            const TextSpan(
-              text: 'XP decay is active — ',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            TextSpan(
-              text: daysInactive != null
-                ? 'you haven\'t worked out in $daysInactive days. '
-                : '',
-            ),
-            const TextSpan(text: 'Work out now to stop losing XP.'),
-          ],
-        ))),
-      ]),
+        ],
+      ),
     );
   }
 }

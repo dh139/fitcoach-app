@@ -55,16 +55,16 @@ class WeeklyBarChart extends StatelessWidget {
                       margin:   const EdgeInsets.symmetric(horizontal: 3),
                       decoration: BoxDecoration(
                         color: isSelected
-                          ? AppColors.lime
+                          ? AppColors.coach
                           : isToday
-                          ? AppColors.limeDim
+                          ? AppColors.coachDim
                           : AppColors.surface3,
                         borderRadius: BorderRadius.circular(5),
                         border: isSelected
                           ? null
                           : isToday
                           ? Border.all(
-                              color: AppColors.limeBorder, width: 0.5)
+                              color: AppColors.coachBorder, width: 0.5)
                           : null,
                       ),
                     ),
@@ -75,7 +75,7 @@ class WeeklyBarChart extends StatelessWidget {
                     width: 4, height: 4,
                     decoration: BoxDecoration(
                       color: day.calories > 0 
-                        ? (isSelected ? AppColors.lime : AppColors.brandPurple)
+                        ? AppColors.coach
                         : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
@@ -90,7 +90,7 @@ class WeeklyBarChart extends StatelessWidget {
                       fontWeight:  isSelected
                           ? FontWeight.w700 : FontWeight.w500,
                       color: isSelected
-                          ? AppColors.lime : AppColors.textTertiary,
+                          ? AppColors.coach : AppColors.textTertiary,
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/widgets/fc_button.dart';
@@ -61,6 +62,7 @@ class WorkoutSession extends ConsumerWidget {
         final quit = await QuitConfirmDialog.show(context);
         if (quit == true && context.mounted) {
           ref.read(workoutProvider.notifier).reset();
+          context.go('/exercises');
         }
       },
       child: Scaffold(
@@ -85,6 +87,7 @@ class WorkoutSession extends ConsumerWidget {
                   final quit = await QuitConfirmDialog.show(context);
                   if (quit == true && context.mounted) {
                     ref.read(workoutProvider.notifier).reset();
+                    context.go('/exercises');
                   }
                 },
               ),
@@ -107,13 +110,13 @@ class WorkoutSession extends ConsumerWidget {
                          overflow: TextOverflow.ellipsis,
                        ),
                      ),
-                     Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                       decoration: BoxDecoration(
-                         color: AppColors.lime,
-                         borderRadius: BorderRadius.circular(20),
-                       ),
-                       child: Text(
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.textPrimary,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
                          '${state.completedCount}/${state.selectedExercises.length}',
                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
                        ),
@@ -181,7 +184,7 @@ class WorkoutSession extends ConsumerWidget {
                           children: [
                             _StatRow(
                               icon:  Icons.bolt_rounded,
-                              color: const Color(0xFFC084FC),
+                              color: AppColors.primary,
                               label: 'Progress',
                               value: '${state.progressPct}%',
                             ),
@@ -191,7 +194,7 @@ class WorkoutSession extends ConsumerWidget {
                               child: LinearProgressIndicator(
                                 value:           state.progressPct / 100,
                                 backgroundColor: AppColors.surface2,
-                                valueColor: const AlwaysStoppedAnimation(const Color(0xFFC084FC)),
+                                valueColor: AlwaysStoppedAnimation(AppColors.primary),
                                 minHeight: 8,
                               ),
                             ),
@@ -319,18 +322,18 @@ class _LockedBanner extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
     decoration: BoxDecoration(
-      color:        const Color(0x1A3B82F6),
+      color:        AppColors.accent5Dim,
       borderRadius: BorderRadius.circular(16),
-      border:       Border.all(color: const Color(0x333B82F6), width: 1),
+      border:       Border.all(color: AppColors.accent5Light, width: 1),
     ),
     child: Row(children: [
-      const Icon(Icons.lock_rounded, color: Color(0xFF60A5FA), size: 18),
+      Icon(Icons.lock_rounded, color: AppColors.accent5, size: 18),
       const SizedBox(width: 12),
       Expanded(child: Text(
         'XP unlocks in ${_fmt(remaining)} — anti-cheat protection active',
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w500,
-          color: Color(0xFF3B82F6), height: 1.3,
+          color: AppColors.accent5, height: 1.3,
         ),
       )),
     ]),
@@ -344,13 +347,13 @@ class _UnlockedBanner extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
     decoration: BoxDecoration(
-      color:        AppColors.limeDim,
+      color:        AppColors.successDim,
       borderRadius: BorderRadius.circular(16),
-      border:       Border.all(color: AppColors.lime, width: 1),
+      border:       Border.all(color: AppColors.success, width: 1),
     ),
-    child: const Row(children: [
-      Icon(Icons.lock_open_rounded, color: AppColors.lime, size: 18),
-      SizedBox(width: 12),
+    child: Row(children: [
+      Icon(Icons.lock_open_rounded, color: AppColors.success, size: 18),
+      const SizedBox(width: 12),
       Expanded(child: Text(
         'XP unlocked — you can finish anytime now',
         style: TextStyle(

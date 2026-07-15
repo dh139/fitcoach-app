@@ -4,12 +4,11 @@ import '../../exercises/models/exercise_model.dart';
 import '../models/workout_session_model.dart';
 import '../models/workout_result_model.dart';
 import '../repositories/workout_repository.dart';
-import '../../../core/services/notification_service.dart';
 final workoutRepositoryProvider =
     Provider<WorkoutRepository>((_) => const WorkoutRepository());
 
 // ── Workout stage ──────────────────────────────────────────────────────────────
-enum WorkoutStage { setup, session, completing, summary }
+enum WorkoutStage { session, completing, summary }
 
 // ── State ──────────────────────────────────────────────────────────────────────
 class WorkoutState {
@@ -24,7 +23,7 @@ class WorkoutState {
   final String?                 error;
 
   const WorkoutState({
-    this.stage             = WorkoutStage.setup,
+    this.stage             = WorkoutStage.session,
     this.workoutName       = 'My Workout',
     this.selectedExercises = const [],
     this.logs              = const [],
@@ -96,6 +95,14 @@ class WorkoutNotifier extends StateNotifier<WorkoutState> {
 
   bool isSelected(String exerciseId) =>
       state.selectedExercises.any((e) => e.id == exerciseId);
+
+  Future<void> startCustomSession(List<ExerciseModel> exercises, String name) async {
+    state = state.copyWith(
+      selectedExercises: exercises,
+      workoutName: name,
+    );
+    await startSession();
+  }
 
   // ── Start session ─────────────────────────────────────────────────────────────
   Future<void> startSession() async {

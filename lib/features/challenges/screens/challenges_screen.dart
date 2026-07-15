@@ -35,15 +35,15 @@ class ChallengesScreen extends ConsumerWidget {
                   toolbarHeight:   56,
                   automaticallyImplyLeading: false,
                   title: Row(children: [
-                    Container(
-                      width: 32, height: 32,
-                      decoration: BoxDecoration(
-                        color:        const Color(0x1AFBBF24),
-                        borderRadius: BorderRadius.circular(9),
-                      ),
-                      child: const Icon(Icons.emoji_events_rounded,
-                          color: Color(0xFFFBBF24), size: 17),
+                  Container(
+                    width: 32, height: 32,
+                    decoration: BoxDecoration(
+                      color:        AppColors.accent4Dim,
+                      borderRadius: BorderRadius.circular(9),
                     ),
+                    child: const Icon(Icons.emoji_events_rounded,
+                        color: AppColors.accent4, size: 17),
+                  ),
                     const SizedBox(width: 10),
                     const Text('Challenges', style: TextStyle(
                       fontFamily: 'Inter', fontSize: 18,
@@ -59,17 +59,17 @@ class ChallengesScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color:        AppColors.limeDim,
+                          color:        AppColors.primaryDim,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                              color: AppColors.limeBorder, width: 0.5),
+                              color: AppColors.primaryLight, width: 0.5),
                         ),
                         child: Text(
                           '${state.pendingCount} to claim',
                           style: const TextStyle(
                             fontFamily: 'Inter', fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.lime,
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
@@ -106,7 +106,7 @@ class ChallengesScreen extends ConsumerWidget {
                               'AI-generated challenges refresh daily and weekly — tailored to your goals',
                               style: TextStyle(
                                 fontFamily: 'Inter', fontSize: 11,
-                                color: Color(0xFFD8B4FE), height: 1.4,
+                                color: AppColors.textSecondary, height: 1.4,
                               ),
                             )),
                           ]),

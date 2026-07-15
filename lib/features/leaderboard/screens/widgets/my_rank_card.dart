@@ -3,7 +3,10 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/widgets/level_badge.dart';
 import '../../models/leaderboard_model.dart';
 
-class MyRankCard extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../dashboard/providers/step_provider.dart';
+
+class MyRankCard extends ConsumerWidget {
   final List<MyPeriodRank> stats;
   const MyRankCard({super.key, required this.stats});
 
@@ -14,8 +17,10 @@ class MyRankCard extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (stats.isEmpty) return const SizedBox.shrink();
+    
+    final stepsToday = ref.watch(stepProvider).stepsToday;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -40,6 +45,22 @@ class MyRankCard extends StatelessWidget {
             fontFamily: 'Inter', fontSize: 13,
             fontWeight: FontWeight.w600, color: AppColors.textPrimary,
           )),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.limeDim,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(children: [
+              const Icon(Icons.directions_walk_rounded, color: AppColors.lime, size: 12),
+              const SizedBox(width: 4),
+              Text('$stepsToday steps today', style: const TextStyle(
+                fontFamily: 'Inter', fontSize: 11,
+                fontWeight: FontWeight.w700, color: AppColors.lime,
+              )),
+            ]),
+          ),
         ]),
         const SizedBox(height: 14),
         Row(children: stats.map((s) => Expanded(child: Padding(

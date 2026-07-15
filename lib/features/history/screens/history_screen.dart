@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_text_styles.dart';
 import '../../../shared/widgets/fc_loader.dart';
 import '../providers/history_provider.dart';
 import 'widgets/calorie_line_chart.dart';
@@ -66,20 +67,14 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   Container(
                     width: 32, height: 32,
                     decoration: BoxDecoration(
-                      color:        AppColors.limeDim,
+                      color:        AppColors.primaryDim,
                       borderRadius: BorderRadius.circular(9),
                     ),
                     child: const Icon(Icons.history_rounded,
-                        color: AppColors.lime, size: 17),
+                        color: AppColors.primary, size: 17),
                   ),
                   const SizedBox(width: 10),
-                  const Text('Workout history', style: TextStyle(
-                    fontFamily:    'Inter',
-                    fontSize:      18,
-                    fontWeight:    FontWeight.w700,
-                    color:         AppColors.textPrimary,
-                    letterSpacing: -0.3,
-                  )),
+                  Text('Workout history', style: AppTextStyles.h2),
                 ]),
                 actions: [
                   if (state.hasData)
@@ -158,8 +153,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         title:     'Workout frequency',
                         subtitle:  'Sessions per week — last 8 weeks',
                         icon:      Icons.bar_chart_rounded,
-                        iconColor: AppColors.lime,
-                        iconBg:    AppColors.limeDim,
+                        iconColor: AppColors.primary,
+                        iconBg:    AppColors.primaryDim,
                         chart:     FrequencyBarChart(
                             data: state.frequencyData),
                       ),
@@ -169,8 +164,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         title:     'Calories burned',
                         subtitle:  'Per session — last 14 days',
                         icon:      Icons.local_fire_department_rounded,
-                        iconColor: const Color(0xFFFF8C42),
-                        iconBg:    const Color(0x1AFF6B00),
+                        iconColor: AppColors.accent4,
+                        iconBg:    AppColors.accent4Dim,
                         chart:     CalorieLineChart(
                             data: state.calorieData),
                       ),
@@ -180,8 +175,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         title:     'XP growth',
                         subtitle:  'Cumulative — last 14 days',
                         icon:      Icons.bolt_rounded,
-                        iconColor: const Color(0xFFFBBF24),
-                        iconBg:    const Color(0x1AFBBF24),
+                        iconColor: AppColors.primary,
+                        iconBg:    AppColors.primaryDim,
                         chart:     XpAreaChart(data: state.xpData),
                       ),
                       const SizedBox(height: 20),

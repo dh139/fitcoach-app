@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat_message_model.dart';
 import '../models/improvement_score_model.dart';
 import '../repositories/coach_repository.dart';
+import '../../dashboard/providers/step_provider.dart';
+import '../../calories/providers/calorie_provider.dart';
+import '../../history/providers/history_provider.dart';
 
 final coachRepositoryProvider =
     Provider<CoachRepository>((_) => const CoachRepository());
@@ -57,9 +60,10 @@ const _s = Object();
 // ── Notifier ───────────────────────────────────────────────────────────────────
 class CoachNotifier extends StateNotifier<CoachState> {
   final CoachRepository _repo;
+  final Ref ref;
   StreamSubscription<String>? _streamSub;
 
-  CoachNotifier(this._repo) : super(const CoachState()) {
+  CoachNotifier(this._repo, this.ref) : super(const CoachState()) {
     _loadAll();
   }
 
@@ -108,8 +112,47 @@ class CoachNotifier extends StateNotifier<CoachState> {
 
     _streamSub?.cancel();
     final buffer = StringBuffer();
+    
+    String contextPrefix = "";
+    try {
+      final stepState = ref.read(stepProvider);
+      final calState = ref.read(calorieProvider);
+      final histState = ref.read(historyProvider);
+      
+      final steps = stepState.stepsToday;
+      final target = stepState.targetSteps;
+      final cals = calState.totals.calories;
+      final protein = calState.totals.protein.toStringAsFixed(1);
+      final carbs = calState.totals.carbs.toStringAsFixed(1);
+      final fat = calState.totals.fat.toStringAsFixed(1);
 
-    _streamSub = _repo.streamChat(trimmed).listen(
+      // Extract workouts completed today
+      final todayStr = DateTime.now().toIso8601String().split('T')[0];
+      final todayWorkouts = histState.workouts.where((w) {
+        final dt = w.completedDateTime;
+        if (dt == null) return false;
+        return dt.toIso8601String().split('T')[0] == todayStr;
+      }).toList();
+
+      String exercisesStr = "";
+      if (todayWorkouts.isEmpty) {
+        exercisesStr = "No exercises logged yet today.";
+      } else {
+        final names = <String>[];
+        for (final w in todayWorkouts) {
+          for (final ex in w.exercises) {
+            names.add("${ex.exerciseName} (${ex.setsCompleted} sets x ${ex.repsCompleted} reps)");
+          }
+        }
+        exercisesStr = names.join(", ");
+      }
+      
+      contextPrefix = "User data for today:\n- Steps: $steps / $target target\n- Calories Consumed: $cals kcal (Protein: ${protein}g, Carbs: ${carbs}g, Fat: ${fat}g)\n- Exercises Completed Today: $exercisesStr";
+    } catch (e) {
+      print("Context extraction error: $e");
+    }
+
+    _streamSub = _repo.streamChat(trimmed, context: contextPrefix).listen(
       (delta) {
          print('DELTA RECEIVED: "$delta"');
         buffer.write(delta);
@@ -175,5 +218,5 @@ class CoachNotifier extends StateNotifier<CoachState> {
 
 final coachProvider =
     StateNotifierProvider<CoachNotifier, CoachState>((ref) {
-  return CoachNotifier(ref.watch(coachRepositoryProvider));
+  return CoachNotifier(ref.watch(coachRepositoryProvider), ref);
 });

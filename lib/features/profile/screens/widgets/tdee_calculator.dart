@@ -48,11 +48,11 @@ class TdeeCalculator extends StatelessWidget {
         user.weight != null && user.height != null;
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color:        AppColors.surface1,
-        borderRadius: BorderRadius.circular(20),
-        border:       Border.all(color: AppColors.border2, width: 0.5),
+        borderRadius: BorderRadius.circular(22),
+        border:       Border.all(color: AppColors.slate, width: 1.0),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [

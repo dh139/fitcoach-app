@@ -94,8 +94,6 @@ class _ExerciseLogItemState extends State<ExerciseLogItem> {
                 child: ExerciseGifView(
                   gifUrl: widget.log.gifUrl,
                   name:   widget.log.exerciseName,
-                  width:  48,
-                  height: 48,
                   fit:    BoxFit.cover,
                 ),
               ),

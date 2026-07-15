@@ -23,7 +23,7 @@ class ImprovementScoreCard extends StatelessWidget {
   };
 
   static const _pillarColors = {
-    'weightProgress':   Color(0xFFC084FC),
+    'weightProgress':   Color(0xFFFB7185),
     'consistency':      AppColors.lime,
     'strengthIncrease': Color(0xFF60A5FA),
     'dietAdherence':    Color(0xFFF59E0B),
@@ -38,95 +38,101 @@ class ImprovementScoreCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border:       Border.all(color: AppColors.border2, width: 0.5),
       ),
-      child: Flexible(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Header
-          Row(children: [
-            // Composite ring
-            SizedBox(
-              width: 64, height: 64,
-              child: Stack(alignment: Alignment.center, children: [
-                CustomPaint(
-                  size: const Size(64, 64),
-                  painter: _ScoreRingPainter(
-                    score: data.composite,
-                    color: _gradeColor,
-                  ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // Header
+        Row(children: [
+          // Composite ring
+          SizedBox(
+            width: 64, height: 64,
+            child: Stack(alignment: Alignment.center, children: [
+              CustomPaint(
+                size: const Size(64, 64),
+                painter: _ScoreRingPainter(
+                  score: data.composite,
+                  color: _gradeColor,
                 ),
-                Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text('${data.composite}', style: const TextStyle(
-                    fontFamily:    'Inter',
-                    fontSize:      17,
-                    fontWeight:    FontWeight.w800,
-                    color:         AppColors.textPrimary,
-                    letterSpacing: -0.5,
-                    height:        1.0,
-                  )),
-                ]),
+              ),
+              Column(mainAxisSize: MainAxisSize.min, children: [
+                Text('${data.composite}', style: const TextStyle(
+                  fontFamily:    'Inter',
+                  fontSize:      17,
+                  fontWeight:    FontWeight.w800,
+                  color:         AppColors.textPrimary,
+                  letterSpacing: -0.5,
+                  height:        1.0,
+                )),
               ]),
-            ),
-            const SizedBox(width: 14),
-        
-            Expanded(child: Column(
+            ]),
+          ),
+          const SizedBox(width: 14),
+      
+          Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('IMPROVEMENT SCORE', style: TextStyle(
+                fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
+                color: AppColors.textTertiary, letterSpacing: 0.9,
+              )),
+              const SizedBox(height: 3),
+              Text(_grade, style: TextStyle(
+                fontFamily:  'Inter',
+                fontSize:    16,
+                fontWeight:  FontWeight.w700,
+                color:       _gradeColor,
+                letterSpacing: -0.3,
+              )),
+              const SizedBox(height: 2),
+              const Text('Last 30 days', style: TextStyle(
+                fontFamily: 'Inter', fontSize: 10,
+                color: AppColors.textTertiary,
+              )),
+            ],
+          )),
+        ]),
+        const SizedBox(height: 14),
+        const Divider(height: 1, color: AppColors.border2),
+        const SizedBox(height: 12),
+      
+        // Pillar bars
+        ...ImprovementScoreModel.pillars.map((key) {
+          final pillar = data.breakdown[key];
+          if (pillar == null) return const SizedBox.shrink();
+          final val    = pillar.score;
+          final color  = _pillarColors[key] ?? AppColors.textTertiary;
+          final label  = ImprovementScoreModel.pillarLabels[key] ?? key;
+          final weight = ImprovementScoreModel.pillarWeights[key] ?? '';
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('IMPROVEMENT SCORE', style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w700,
-                  color: AppColors.textTertiary, letterSpacing: 0.9,
-                )),
-                const SizedBox(height: 3),
-                Text(_grade, style: TextStyle(
-                  fontFamily:  'Inter',
-                  fontSize:    16,
-                  fontWeight:  FontWeight.w700,
-                  color:       _gradeColor,
-                  letterSpacing: -0.3,
-                )),
-                const SizedBox(height: 2),
-                const Text('Last 30 days', style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 10,
-                  color: AppColors.textTertiary,
-                )),
-              ],
-            )),
-          ]),
-          const SizedBox(height: 14),
-          const Divider(height: 1, color: AppColors.border2),
-          const SizedBox(height: 12),
-        
-          // Pillar bars
-          ...ImprovementScoreModel.pillars.map((key) {
-            final pillar = data.breakdown[key];
-            if (pillar == null) return const SizedBox.shrink();
-            final color  = _pillarColors[key] ?? AppColors.lime;
-            final label  = ImprovementScoreModel.pillarLabels[key] ?? key;
-            final weight = ImprovementScoreModel.pillarWeights[key] ?? '';
-        
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Row(children: [
-                  Expanded(child: Text(label, style: const TextStyle(
-                    fontFamily: 'Inter', fontSize: 11,
-                    color: AppColors.textSecondary,
-                  ))),
-                  Text(weight, style: const TextStyle(
-                    fontFamily: 'Inter', fontSize: 10,
-                    color: AppColors.textTertiary,
-                  )),
-                  const SizedBox(width: 8),
-                  Text('${pillar.score}/100', style: TextStyle(
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Row(
+                    children: [
+                      Text(label, style: const TextStyle(
+                        fontFamily: 'Inter', fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      )),
+                      const SizedBox(width: 6),
+                      Text('($weight)', style: const TextStyle(
+                        fontFamily: 'Inter', fontSize: 9,
+                        color: AppColors.textTertiary,
+                      )),
+                    ],
+                  ),
+                  Text('$val/100', style: TextStyle(
                     fontFamily: 'Inter', fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: color,
                   )),
                 ]),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(3),
+                  borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
-                    value:           pillar.score / 100,
+                    value:           val / 100,
                     backgroundColor: AppColors.surface3,
                     valueColor:      AlwaysStoppedAnimation(color),
                     minHeight:       4,
@@ -138,10 +144,9 @@ class ImprovementScoreCard extends StatelessWidget {
                   color: AppColors.textTertiary,
                 )),
               ]),
-            );
-          }),
-        ]),
-      ),
+          );
+        }),
+      ]),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'dart:io';
 
 final notificationServiceProvider =
@@ -26,7 +27,7 @@ class NotificationService {
     );
 
     await _notificationsPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
           android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: (details) {
         debugPrint('🔔 Notification tapped: ${details.payload}');
@@ -36,13 +37,17 @@ class NotificationService {
     // Timezone setup
     tz.initializeTimeZones();
     try {
-      final TimezoneInfo tzInfo = await FlutterTimezone.getLocalTimezone();
-      final String ianaId = tzInfo.identifier; // e.g. "Asia/Kolkata"
+      final tzInfo = await FlutterTimezone.getLocalTimezone();
+      String ianaId = tzInfo.identifier;
+      if (ianaId == 'Asia/Calcutta') ianaId = 'Asia/Kolkata';
+      if (ianaId == 'Asia/Rangoon') ianaId = 'Asia/Yangon';
+      
       tz.setLocalLocation(tz.getLocation(ianaId));
       debugPrint('✅ Timezone set to: $ianaId');
-    } catch (e) {
+    } catch (e, stack) {
       tz.setLocalLocation(tz.getLocation('UTC'));
       debugPrint('⚠️ Timezone fallback to UTC — error: $e');
+      debugPrint('Stacktrace: $stack');
     }
   }
 
@@ -93,6 +98,27 @@ class NotificationService {
     await showImmediateNotification(
       title: '🔧 Diagnostics test',
       body: 'Channel works! Check logcat for scheduling details.',
+    );
+
+    // 5. 10-Second delayed notification test
+    debugPrint('⏳ Scheduling 10-second delayed test...');
+    final nowTz = tz.TZDateTime.now(tz.local);
+    final delayedTime = nowTz.add(const Duration(seconds: 10));
+    
+    await _notificationsPlugin.zonedSchedule(
+      id: 999,
+      title: '⏰ Delayed Test',
+      body: 'This proves AlarmManager is working!',
+      scheduledDate: delayedTime,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'test_channel',
+          'Test Channel',
+          importance: Importance.max,
+          priority: Priority.max,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
 
     debugPrint('──────────── END DIAGNOSTICS ────────────');
@@ -152,7 +178,7 @@ class NotificationService {
   }
 
   // ─────────────────────────────────────────────
-  // SCHEDULE DAILY RECURRING NOTIFICATION
+  // SAVE PREFERRED TIME (Handled by Background Service)
   // ─────────────────────────────────────────────
   Future<void> scheduleDailyWorkoutReminder({
     required int id,
@@ -161,66 +187,22 @@ class NotificationService {
     required int hour,
     required int minute,
   }) async {
-    // Cancel any stale notification with this id first
-    await _notificationsPlugin.cancel(id);
-
-    // Persist the chosen time
+    // We no longer use zonedSchedule because AlarmManager can be unreliable.
+    // Instead, we just save the preferred time here, and the 24/7 background 
+    // service will dynamically fetch the AI message and fire it when the time comes!
     final box = await Hive.openBox('settings');
     await box.put('notifHour', hour);
     await box.put('notifMinute', minute);
-
-    const androidDetails = AndroidNotificationDetails(
-      'daily_workout_channel_id',
-      'Workout Reminders',
-      channelDescription: 'Daily AI fitness suggestions',
-      importance: Importance.max,
-      priority: Priority.max,
-      playSound: true,
-      enableVibration: true,
-    );
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-    const details =
-        NotificationDetails(android: androidDetails, iOS: iosDetails);
-
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    
+    final service = FlutterBackgroundService();
+    if (await service.isRunning()) {
+      service.invoke('updateSettings', {
+        'notifHour': hour,
+        'notifMinute': minute,
+      });
     }
-
-    debugPrint('📅 Scheduling notification:');
-    debugPrint('   • id       = $id');
-    debugPrint('   • fires at = $scheduledDate');
-    debugPrint('   • tz.local = ${tz.local.name}');
-    debugPrint('   • now      = $now');
-    debugPrint(
-        '   • in       = ${scheduledDate.difference(now).inMinutes} min');
-
-    await _notificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-
-    // Confirm it landed in the pending list
-    final pending =
-        await _notificationsPlugin.pendingNotificationRequests();
-    final queued = pending.any((n) => n.id == id);
-    debugPrint(queued
-        ? '✅ Queued! Total pending: ${pending.length}'
-        : '❌ NOT in pending list — zonedSchedule may have thrown silently');
+    
+    debugPrint('✅ Saved AI Notification preference for $hour:$minute');
   }
 
   // ─────────────────────────────────────────────
@@ -241,10 +223,10 @@ class NotificationService {
       presentSound: true,
     );
     await _notificationsPlugin.show(
-      888,
-      title,
-      body,
-      const NotificationDetails(android: androidDetails, iOS: iosDetails),
+      id: 888,
+      title: title,
+      body: body,
+      notificationDetails: const NotificationDetails(android: androidDetails, iOS: iosDetails),
     );
   }
 

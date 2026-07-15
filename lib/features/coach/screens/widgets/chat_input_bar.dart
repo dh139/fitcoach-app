@@ -134,9 +134,9 @@ class _ChatInputBarState extends State<ChatInputBar> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: _focusNode.hasFocus
-                  ? AppColors.limeBorder
+                  ? AppColors.coach
                   : AppColors.border3,
-              width: _focusNode.hasFocus ? 1 : 0.5,
+              width: _focusNode.hasFocus ? 1.5 : 0.5,
             ),
           ),
           child: TextField(
@@ -177,16 +177,16 @@ class _ChatInputBarState extends State<ChatInputBar> {
             duration: const Duration(milliseconds: 150),
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color:        (_hasText && !widget.disabled)
-                  ? AppColors.lime
-                  : AppColors.surface2,
+              color: (_hasText && !widget.disabled)
+                  ? AppColors.textPrimary
+                  : AppColors.surface3,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.send_rounded,
               color: (_hasText && !widget.disabled)
-                  ? AppColors.bg
-                  : AppColors.surface4,
+                  ? Colors.white
+                  : AppColors.textTertiary,
               size: 18,
             ),
           ),
