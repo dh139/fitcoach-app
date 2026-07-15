@@ -120,12 +120,10 @@ void onStart(ServiceInstance service) async {
       try {
         // Fetch personalized AI insight
         final repo = const CoachRepository();
-        final scoreData = await repo.getImprovementScore();
+        final advice = await repo.getDailyAdvice();
         
         final title = 'FitCoach AI ⚡';
-        final body = scoreData.alerts.isNotEmpty 
-            ? scoreData.alerts.first.message 
-            : "Your daily plan is ready! Let's crush today's goals.";
+        final body = advice;
             
         final ns = NotificationService();
         await ns.showImmediateNotification(title: title, body: body);

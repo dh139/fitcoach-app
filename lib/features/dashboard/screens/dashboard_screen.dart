@@ -9,20 +9,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../features/auth/providers/auth_provider.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/fc_loader.dart';
-import '../../../shared/widgets/stat_card.dart';
 
 import '../providers/dashboard_provider.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/decay_warning_banner.dart';
-import 'widgets/level_up_dialog.dart';
 import 'widgets/quick_actions_grid.dart';
-import 'widgets/activity_rings_card.dart';
 import 'widgets/streak_widget.dart';
 import 'widgets/xp_history_tile.dart';
-import '../../../shared/widgets/xp_bar.dart';
 import '../providers/step_provider.dart';
 import '../../../core/network/api_client.dart';
 import '../../exercises/models/exercise_model.dart';
@@ -127,10 +122,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
         }
       }
       _fetchAiRecommendations(goal.toString(), focus.toString(), duration.toString());
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showQuestionnaireDialog();
-      });
     }
   }
 
@@ -139,10 +130,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with TickerPr
       _aiLoadingRecommendations = true;
     });
     try {
+      final stepState = ref.read(stepProvider);
       final res = await ApiClient.post('/exercises/ai-recommendations', data: {
         'goal': goal,
         'focus': focus,
         'duration': duration,
+        'context': 'User logged ${stepState.stepsToday} steps today, slept $_sleepHours hours, and had $_waterGlasses glasses of water.',
       });
       if (res.statusCode == 200 && res.data['success'] == true) {
         final list = (res.data['data'] as List<dynamic>)

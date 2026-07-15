@@ -1,6 +1,9 @@
 const Exercise = require('../models/Exercise');
 const UserFavorite = require('../models/UserFavorite');
 const axios = require('axios');
+const Groq = require('groq-sdk');
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // GET /api/exercises
 const getExercises = async (req, res) => {
@@ -123,26 +126,27 @@ const getUserFavorites = async (req, res) => {
 // POST /api/exercises/ai-recommendations
 const getAiRecommendations = async (req, res) => {
   try {
-    const { goal, focus, duration } = req.body;
+    const { goal, focus, duration, context } = req.body;
     
     // Fetch a pool of exercises from the database to give the AI context (e.g. 60 exercises)
     const exercises = await Exercise.find({}).limit(60).lean();
     
-    if (!process.env.NVIDIA_API_KEY) {
-      console.warn("NVIDIA_API_KEY not found. Falling back to DB filters.");
+    if (!process.env.GROQ_API_KEY) {
+      console.warn("GROQ_API_KEY not found. Falling back to DB filters.");
       const fallback = exercises
         .filter(e => e.bodyPart?.toLowerCase() === focus?.toLowerCase() || e.target?.toLowerCase() === focus?.toLowerCase())
         .slice(0, 5);
       return res.status(200).json({ success: true, data: fallback.length ? fallback : exercises.slice(0, 5) });
     }
 
-    // Call Nvidia completions API with the database list
-    const payload = {
-      model: "minimaxai/minimax-m3",
+    // Call Groq completions API with the database list
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "user",
           content: `Select exactly 5 exercises from this database that match the user's fitness goal: "${goal}", target area: "${focus}", workout duration: "${duration}" minutes.
+${context ? `Current user context: ${context}. Make sure the workout adapts intelligently to this.` : ""}
 Database list:
 ${JSON.stringify(exercises.map(e => ({ name: e.name, bodyPart: e.bodyPart, target: e.target, difficulty: e.difficulty })))}
 
@@ -150,18 +154,10 @@ Respond ONLY with a JSON array of the recommended exercise names, like: ["Pushup
         }
       ],
       max_tokens: 500,
-      temperature: 0.2
-    };
-
-    const response = await axios.post("https://integrate.api.nvidia.com/v1/chat/completions", payload, {
-      headers: {
-        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      timeout: 10000
+      temperature: 0.7
     });
 
-    const rawText = response.data.choices[0]?.message?.content || "";
+    const rawText = response.choices[0]?.message?.content || "";
     const cleaned = rawText.replace(/```json|```/g, "").trim();
     let names = [];
     try {
@@ -182,7 +178,7 @@ Respond ONLY with a JSON array of the recommended exercise names, like: ["Pushup
     
     res.status(200).json({ success: true, data: recommended.length ? recommended : exercises.slice(0, 5) });
   } catch (error) {
-    console.error("Nvidia exercise recommendations error:", error.message);
+    console.error("Groq exercise recommendations error:", error.message);
     try {
       const fallback = await Exercise.find({}).limit(5).lean();
       res.status(200).json({ success: true, data: fallback });

@@ -38,6 +38,15 @@ class CoachRepository {
     throw Exception('Failed to load improvement score');
   }
 
+  // ── Get daily AI advice ────────────────────────────────────────────────────
+  Future<String> getDailyAdvice() async {
+    final res = await ApiClient.get(ApiEndpoints.dailyAdvice);
+    if (res.statusCode == 200 && res.data['success'] == true) {
+      return res.data['data'] as String;
+    }
+    throw Exception('Failed to load daily advice');
+  }
+
   // ── SSE streaming chat ─────────────────────────────────────────────────────
   // Uses the `http` package directly because Dio cannot handle
   // chunked streaming responses properly.

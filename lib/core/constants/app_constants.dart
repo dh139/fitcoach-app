@@ -4,7 +4,7 @@ class AppConstants {
   // ── API ────────────────────────────────────────────────────────────────────
   // Android emulator uses 10.0.2.2 to reach the host machine's localhost.
   // For a physical device, use your LAN IP (e.g. 192.168.x.x).
-  static const baseUrl     = 'https://fitcoach-zlpn.onrender.com/api';
+  static const baseUrl     = 'http://10.0.2.2:5000/api';
   static const connectTimeout = Duration(seconds: 15);
   static const receiveTimeout = Duration(seconds: 30);
 

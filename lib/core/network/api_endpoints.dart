@@ -44,6 +44,7 @@ class ApiEndpoints {
   static const coachChat        = '/coach/chat';
   static const coachHistory     = '/coach/history';
   static const improvementScore = '/coach/improvement-score';
+  static const dailyAdvice      = '/coach/daily-advice';
 
   // Challenges
   static const challenges = '/challenges';

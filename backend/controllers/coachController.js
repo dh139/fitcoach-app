@@ -129,35 +129,27 @@ const getDailyAdvice = async (req, res) => {
   try {
     const { systemPrompt } = await buildCoachContext(req.user._id);
     
-    if (!process.env.NVIDIA_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return res.status(200).json({
         success: true,
         data: "Keep up the consistency! Set a daily step target and hit it to stay on track."
       });
     }
 
-    const payload = {
-      model: "minimaxai/minimax-m3",
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: "Based on my profile stats, give me a single, warm, highly specific actionable fitness/diet tip for today in 2 short sentences. Make it encouraging." }
       ],
       max_tokens: 300,
-      temperature: 0.7
-    };
-
-    const response = await axios.post("https://integrate.api.nvidia.com/v1/chat/completions", payload, {
-      headers: {
-        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      timeout: 10000
+      temperature: 0.7,
     });
 
-    const advice = response.data.choices[0]?.message?.content || "Focus on hitting your step goals and logging meals today!";
+    const advice = response.choices[0]?.message?.content || "Focus on hitting your step goals and logging meals today!";
     res.status(200).json({ success: true, data: advice.trim() });
   } catch (error) {
-    console.error("Nvidia daily advice error:", error.message);
+    console.error("Groq daily advice error:", error.message);
     res.status(200).json({
       success: true,
       data: "Log your meals and complete a workout session today to keep your streak active!"

@@ -34,6 +34,20 @@ class NotificationService {
       },
     );
 
+    if (Platform.isAndroid) {
+      const channel = AndroidNotificationChannel(
+        'milestones_channel_id',
+        'Milestones',
+        description: 'Goal achievements and AI Reminders',
+        importance: Importance.max,
+        playSound: true,
+      );
+      await _notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+    }
+
     // Timezone setup
     tz.initializeTimeZones();
     try {
